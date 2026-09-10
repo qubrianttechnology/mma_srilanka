@@ -1,0 +1,14 @@
+{
+  "name": "sri-lanka-mma-federation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Official website for the Sri Lanka Mixed Martial Arts Federation",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "preview": "npm run build && wrangler pages dev dist",
+    "deploy": "npm run build && wrangler pages deploy dist --project-name=sri-lanka-mma-federation"
+  },
+  "devDependencies": {
+    "wrangler": "^4.102.0"
+  }
+}

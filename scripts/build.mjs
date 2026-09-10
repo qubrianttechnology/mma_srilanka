@@ -4,11 +4,19 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const output = join(root, 'dist');
-const defaultSiteUrl = 'https://www.mmasrilanka.lk';
+const sourceSiteUrl = 'https://www.mmasrilanka.lk';
+const defaultSiteUrl = 'https://qubrianttechnology.github.io/mma_srilanka';
 const siteUrl = (process.env.SITE_URL || defaultSiteUrl).replace(/\/$/, '');
 
-if (!/^https:\/\/[a-z0-9.-]+(?::\d+)?$/i.test(siteUrl)) {
-  throw new Error('SITE_URL must be an HTTPS origin, for example https://www.example.lk');
+let parsedSiteUrl;
+try {
+  parsedSiteUrl = new URL(siteUrl);
+} catch {
+  throw new Error('SITE_URL must be a valid HTTPS URL');
+}
+
+if (parsedSiteUrl.protocol !== 'https:' || parsedSiteUrl.search || parsedSiteUrl.hash) {
+  throw new Error('SITE_URL must be an HTTPS URL without a query string or fragment');
 }
 
 const files = [
@@ -17,9 +25,7 @@ const files = [
   'script.js',
   'robots.txt',
   'sitemap.xml',
-  'site.webmanifest',
-  '_headers',
-  '_redirects'
+  'site.webmanifest'
 ];
 
 await rm(output, { recursive: true, force: true });
@@ -32,12 +38,13 @@ for (const file of files) {
 
   if (['index.html', 'robots.txt', 'sitemap.xml'].includes(file)) {
     const contents = await readFile(source, 'utf8');
-    await writeFile(destination, contents.replaceAll(defaultSiteUrl, siteUrl));
+    await writeFile(destination, contents.replaceAll(sourceSiteUrl, siteUrl));
   } else {
     await cp(source, destination);
   }
 }
 
 await cp(join(root, 'assets'), join(output, 'assets'), { recursive: true });
-console.log(`Cloudflare Pages bundle created: ${output}`);
+await writeFile(join(output, '.nojekyll'), '');
+console.log(`GitHub Pages bundle created: ${output}`);
 console.log(`Canonical site URL: ${siteUrl}`);

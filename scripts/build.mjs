@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const output = join(root, 'dist');
 const sourceSiteUrl = 'https://www.mmasrilanka.lk';
-const defaultSiteUrl = 'https://qubrianttechnology.github.io/mma_srilanka';
+const defaultSiteUrl = 'https://www.mmasrilanka.lk';
 const siteUrl = (process.env.SITE_URL || defaultSiteUrl).replace(/\/$/, '');
 
 let parsedSiteUrl;
@@ -45,6 +45,5 @@ for (const file of files) {
 }
 
 await cp(join(root, 'assets'), join(output, 'assets'), { recursive: true });
-await writeFile(join(output, '.nojekyll'), '');
-console.log(`GitHub Pages bundle created: ${output}`);
+console.log(`Cloudflare Workers asset bundle created: ${output}`);
 console.log(`Canonical site URL: ${siteUrl}`);

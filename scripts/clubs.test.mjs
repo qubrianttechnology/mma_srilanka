@@ -25,6 +25,6 @@ assert(profile.includes('https://example.test/clubs/test-club/'));
 assert(!profile.includes('<strong>Affiliation number:</strong>'));
 assert.equal(render([]).pages.size,1);
 const actual=JSON.parse((await readFile(new URL('../data/clubs.json',import.meta.url),'utf8')).replace(/^\uFEFF/,''));
-const published=renderClubs({data:actual,template,siteUrl:'https://www.mmasrilanka.com'});
+const published=renderClubs({data:actual,template,siteUrl:'https://mmasrilanka.com'});
 assert(published.pages.get('clubs/mma-colombo-combat-club/index.html').includes('tel:+94753414414'));
 console.log('Passed: affiliation publication rules, country isolation, unsafe input rejection, escaping, structured data, nested assets, empty directory and supplied club phone.');

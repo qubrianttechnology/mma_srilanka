@@ -8,7 +8,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const output = join(root, 'dist');
 const sourceSiteUrls = ['https://www.mmasrilanka.lk', 'https://www.mmasrilanka.com', 'https://mmasrilanka.com'];
 const defaultSiteUrl = 'https://mmasrilanka.com';
-const siteUrl = (process.env.SITE_URL || defaultSiteUrl).replace(/\/$/, '');
+let siteUrl = (process.env.SITE_URL || defaultSiteUrl).replace(/\/$/, '');
 
 let parsedSiteUrl;
 try {
@@ -19,6 +19,11 @@ try {
 
 if (parsedSiteUrl.protocol !== 'https:' || parsedSiteUrl.search || parsedSiteUrl.hash || parsedSiteUrl.username || parsedSiteUrl.password || parsedSiteUrl.pathname !== '/') {
   throw new Error('SITE_URL must be an HTTPS origin without credentials, path, query string or fragment');
+}
+
+// Keep production metadata on the primary domain even with a legacy build override.
+if (parsedSiteUrl.hostname === 'www.mmasrilanka.com') {
+  siteUrl = defaultSiteUrl;
 }
 
 const files = [

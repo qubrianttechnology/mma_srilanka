@@ -43,7 +43,7 @@ No deployment, Search Console verification/submission, live ranking claim or ind
 
 ### Sitemap fetch troubleshooting
 
-The primary origin is `https://mmasrilanka.com`. Set Cloudflare Workers Builds' production `SITE_URL` to that exact origin (or remove the override to use the build default), then deploy. An existing `SITE_URL=https://www.mmasrilanka.com` override will continue generating www URLs even after the source change. The hostname must have working DNS and serve the website; `SITE_URL` does not configure DNS.
+The primary origin is `https://mmasrilanka.com`. Set Cloudflare Workers Builds' production `SITE_URL` to that exact origin (or remove the override to use the build default), then deploy. The build also normalizes a legacy www override to the primary origin so the sitemap, canonical URLs and social metadata stay consistent. The hostname must have working DNS and serve the website; `SITE_URL` does not configure DNS.
 
 In Search Console, select the `mmasrilanka.com` Domain property or the `https://mmasrilanka.com/` URL-prefix property. Inspect `https://mmasrilanka.com/sitemap.xml` with **Test live URL** and check **Crawl allowed? Yes** and **Page fetch: Successful**. Expand a failed fetch to see its exact reason before changing hosting rules. After a successful live test, resubmit `https://mmasrilanka.com/sitemap.xml`. See [Google's sitemap fetch troubleshooting](https://support.google.com/webmasters/answer/7451001#sitemap_fetch_errors).
 

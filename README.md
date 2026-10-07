@@ -21,12 +21,12 @@ The `wrangler.jsonc` file points Wrangler to the generated `dist/` directory and
 Add this production environment variable in Cloudflare when the final domain is known:
 
 ```text
-SITE_URL=https://www.mmasrilanka.com
+SITE_URL=https://mmasrilanka.com
 ```
 
 Once connected, every push to `main` will build, validate and deploy automatically. A failing test or SEO check stops the build before deployment. GitHub Actions also runs the checks on pushes and pull requests.
 
-After the first deployment, open the `workers.dev` URL shown by Cloudflare. To use `www.mmasrilanka.com`, add it under the Worker's **Settings > Domains & Routes > Add > Custom Domain**. The domain must be in the appropriate Cloudflare account; setting `SITE_URL` only changes generated URLs and does not configure DNS. Redirect the apex hostname to the chosen primary hostname through Cloudflare if both are used.
+After the first deployment, open the `workers.dev` URL shown by Cloudflare. To use `mmasrilanka.com`, add it under the Worker's **Settings > Domains & Routes > Add > Custom Domain**. The domain must be in the appropriate Cloudflare account; setting `SITE_URL` only changes generated URLs and does not configure DNS. If you also configure the www hostname, redirect it to https://mmasrilanka.com through Cloudflare.
 
 Keep Cloudflare tokens and local environment files out of Git. Workers Builds manages its deployment credential in Cloudflare; this repository does not require a Cloudflare token in GitHub Actions.
 

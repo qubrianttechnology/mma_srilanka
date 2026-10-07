@@ -6,8 +6,8 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const output = join(root, 'dist');
-const sourceSiteUrls = ['https://www.mmasrilanka.lk', 'https://www.mmasrilanka.com'];
-const defaultSiteUrl = 'https://www.mmasrilanka.com';
+const sourceSiteUrls = ['https://www.mmasrilanka.lk', 'https://www.mmasrilanka.com', 'https://mmasrilanka.com'];
+const defaultSiteUrl = 'https://mmasrilanka.com';
 const siteUrl = (process.env.SITE_URL || defaultSiteUrl).replace(/\/$/, '');
 
 let parsedSiteUrl;

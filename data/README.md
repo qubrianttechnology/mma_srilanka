@@ -27,7 +27,7 @@ Draft, suspended and expired clubs do not appear in the built output or sitemap.
 
 ## Google discovery
 
-The default public origin is `https://www.mmasrilanka.com`, matching the existing robots.txt sitemap domain. Set `SITE_URL` if the actual public origin differs. The build uses the same origin for canonical URLs, social metadata, structured data, the sitemap and robots.txt.
+The default public origin is `https://mmasrilanka.com`, matching the existing robots.txt sitemap domain. Set `SITE_URL` if the actual public origin differs. The build uses the same origin for canonical URLs, social metadata, structured data, the sitemap and robots.txt.
 
 After publishing the production site, verify the domain in Google Search Console and submit `/sitemap.xml`. Club pages must be publicly reachable. Indexing and ranking remain Google's decision and are not guaranteed. No Search Console submission or deployment is performed by the build.
 

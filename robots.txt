@@ -3,4 +3,4 @@ Allow: /
 
 # Search crawlers, including Googlebot and OAI-SearchBot, use the rule above.
 # Hosting firewall and bot protection settings must also permit crawling.
-Sitemap: https://www.mmasrilanka.com/sitemap.xml
+Sitemap: https://mmasrilanka.com/sitemap.xml

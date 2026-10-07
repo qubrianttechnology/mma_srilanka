@@ -19,7 +19,7 @@ The main search topic is **MMA Srilanka**, with the natural spelling **MMA Sri L
 ## Implemented
 
 - Unique page titles, meta descriptions, social sharing titles and descriptions.
-- Consistent public origin: `https://www.mmasrilanka.com`, configurable with `SITE_URL`.
+- Consistent public origin: `https://mmasrilanka.com`, configurable with `SITE_URL`.
 - Canonical URLs, internal links to canonical routes, and permanent redirects from HTML/legacy variants.
 - WebSite site-name markup on the home page, with MMA Srilanka / MMA Sri Lanka as site-name variants.
 - SportsOrganization and WebPage/AboutPage/ContactPage/CollectionPage structured data; real club details and breadcrumbs.
@@ -35,11 +35,17 @@ The main search topic is **MMA Srilanka**, with the natural spelling **MMA Sri L
 
 1. Deploy the built website to the public domain. `SITE_URL` must match the real primary origin.
 2. Verify domain ownership in Google Search Console. A DNS verification record must be installed through the domain provider, or set the `GOOGLE_SITE_VERIFICATION` build environment variable to the actual HTML verification token. No token is generated or fabricated by this project.
-3. Submit `https://www.mmasrilanka.com/sitemap.xml` in Search Console and inspect the home, club directory and club profile URLs. Redirect any separately hosted alternate hostname to the primary hostname in the hosting/domain configuration.
+3. Submit `https://mmasrilanka.com/sitemap.xml` in Search Console and inspect the home, club directory and club profile URLs. Redirect any separately hosted alternate hostname to the primary hostname in the hosting/domain configuration.
 4. Monitor the Search Console indexing and performance reports after deployment. Update approved clubs and publish factual event dates and substantive news as they become available.
 5. Run PageSpeed Insights against the live domain to measure real delivery and Core Web Vitals. Field performance and external backlinks are not verified by the local build checks.
 
 No deployment, Search Console verification/submission, live ranking claim or indexation guarantee is included in these code changes. Google decides whether and how pages appear.
+
+### Sitemap fetch troubleshooting
+
+The primary origin is `https://mmasrilanka.com`. Set Cloudflare Workers Builds' production `SITE_URL` to that exact origin (or remove the override to use the build default), then deploy. An existing `SITE_URL=https://www.mmasrilanka.com` override will continue generating www URLs even after the source change. The hostname must have working DNS and serve the website; `SITE_URL` does not configure DNS.
+
+In Search Console, select the `mmasrilanka.com` Domain property or the `https://mmasrilanka.com/` URL-prefix property. Inspect `https://mmasrilanka.com/sitemap.xml` with **Test live URL** and check **Crawl allowed? Yes** and **Page fetch: Successful**. Expand a failed fetch to see its exact reason before changing hosting rules. After a successful live test, resubmit `https://mmasrilanka.com/sitemap.xml`. See [Google's sitemap fetch troubleshooting](https://support.google.com/webmasters/answer/7451001#sitemap_fetch_errors).
 
 Official references:
 - https://developers.google.com/search/docs/fundamentals/seo-starter-guide

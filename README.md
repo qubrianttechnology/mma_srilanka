@@ -4,10 +4,13 @@ A responsive, accessible and SEO-ready static website configured for Cloudflare 
 
 ## Cloudflare deployment
 
-The existing Cloudflare Git-connected project can use these settings:
+Connect `https://github.com/qubrianttechnology/mma_srilanka` through Cloudflare Workers Builds. In the Cloudflare dashboard, open **Workers & Pages**, create or select the Worker, and connect the GitHub repository. Authorize the Cloudflare GitHub app to access this repository when prompted.
+
+Use these settings (this project uses Workers Static Assets, not Pages):
 
 ```text
-Build command: npm run build
+Worker name: sri-lanka-mma-federation
+Build command: npm test && npm run check:seo
 Deploy command: npx wrangler deploy
 Root directory: /
 Production branch: main
@@ -21,19 +24,41 @@ Add this production environment variable in Cloudflare when the final domain is 
 SITE_URL=https://www.mmasrilanka.com
 ```
 
-Every push to `main` will then build and deploy automatically.
+Once connected, every push to `main` will build, validate and deploy automatically. A failing test or SEO check stops the build before deployment. GitHub Actions also runs the checks on pushes and pull requests.
+
+After the first deployment, open the `workers.dev` URL shown by Cloudflare. To use `www.mmasrilanka.com`, add it under the Worker's **Settings > Domains & Routes > Add > Custom Domain**. The domain must be in the appropriate Cloudflare account; setting `SITE_URL` only changes generated URLs and does not configure DNS. Redirect the apex hostname to the chosen primary hostname through Cloudflare if both are used.
+
+Keep Cloudflare tokens and local environment files out of Git. Workers Builds manages its deployment credential in Cloudflare; this repository does not require a Cloudflare token in GitHub Actions.
+
+## GitHub version control
+
+The production branch is `main`. For an update:
+
+```bash
+git pull --ff-only origin main
+npm ci
+# Edit the website, then validate it.
+npm test
+npm run check:seo
+git add <changed-files>
+git commit -m "Describe the website update"
+git push origin main
+```
+
+For reviewed changes, push a feature branch and open a pull request into `main`. Track `package-lock.json` so local development and Cloudflare install the same dependency versions. Generated `dist/` files are rebuilt and are not committed.
 
 ### Local development
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
 ### Manual deployment
 
 ```bash
-npm install
+npm ci
+npx wrangler login
 npm run deploy
 ```
 

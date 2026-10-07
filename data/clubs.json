@@ -1,0 +1,14 @@
+﻿{
+  "clubs": [
+    {
+      "slug": "mma-colombo-combat-club",
+      "name": "MMA Colombo Combat Club",
+      "countryCode": "LK",
+      "country": "Sri Lanka",
+      "city": "Colombo / Gampaha",
+      "description": "MMA Colombo Combat Club is an SLMMAF affiliated club in Sri Lanka, listed for Colombo / Gampaha. Contact the club for training information and its exact venue.",
+      "phone": "0753 414 414",
+      "status": "approved"
+    }
+  ]
+}

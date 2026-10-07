@@ -1,92 +1,71 @@
 const header = document.querySelector('[data-header]');
 const toggle = document.querySelector('[data-menu-toggle]');
 const nav = document.querySelector('[data-nav]');
+const sidebar = document.querySelector('[data-sidebar]');
+const closeButton = document.querySelector('[data-menu-close]');
+const backdrop = document.querySelector('[data-menu-backdrop]');
+const mobileNav = window.matchMedia('(max-width: 1100px)');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let menuOpen = false;
+const background = [header, document.querySelector('main'), document.querySelector('footer')].filter(Boolean);
+const previousInert = new Map();
 
+function setMenu(open, restoreFocus = false) {
+  menuOpen = open && mobileNav.matches;
+  sidebar.classList.toggle('open', menuOpen);
+  sidebar.inert = !menuOpen;
+  toggle.classList.toggle('open', menuOpen);
+  toggle.setAttribute('aria-expanded', String(menuOpen));
+  toggle.setAttribute('aria-label', menuOpen ? 'Close navigation' : 'Open navigation');
+  document.body.classList.toggle('menu-open', menuOpen);
+  if (menuOpen) {
+    sidebar.setAttribute('role', 'dialog');
+    sidebar.setAttribute('aria-modal', 'true');
+    background.forEach(element => {
+      if (!previousInert.has(element)) previousInert.set(element, element.inert);
+      element.inert = true;
+    });
+    // Commit drawer visibility before moving keyboard focus into it.
+    sidebar.getBoundingClientRect();
+    closeButton.focus({ preventScroll: true });
+  } else {
+    sidebar.removeAttribute('role');
+    sidebar.removeAttribute('aria-modal');
+    previousInert.forEach((value, element) => { element.inert = value; });
+    previousInert.clear();
+    if (restoreFocus && mobileNav.matches) toggle.focus();
+  }
+}
+
+toggle.addEventListener('click', () => setMenu(!menuOpen));
+closeButton.addEventListener('click', () => setMenu(false, true));
+backdrop.addEventListener('click', () => setMenu(false, true));
+sidebar.querySelectorAll('a').forEach(link => link.addEventListener('click', () => setMenu(false)));
+mobileNav.addEventListener('change', () => {
+  const focusWasInSidebar = sidebar.contains(document.activeElement);
+  setMenu(false, focusWasInSidebar);
+  if (!mobileNav.matches && focusWasInSidebar) document.querySelector('#desktop-nav a[aria-current="page"]')?.focus();
+});
+document.addEventListener('keydown', event => {
+  if (!menuOpen) return;
+  if (event.key === 'Escape') { event.preventDefault(); setMenu(false, true); }
+  if (event.key === 'Tab') {
+    const focusable = [...sidebar.querySelectorAll('a[href], button:not([disabled])')];
+    const first = focusable[0], last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  }
+});
+document.documentElement.classList.add('nav-ready');
+setMenu(false);
 if (!reduceMotion) document.documentElement.classList.add('motion-ready');
-
-const updateHeader = () => header?.classList.toggle('scrolled', window.scrollY > 40);
+const updateHeader = () => header.classList.toggle('scrolled', window.scrollY > 40);
 updateHeader();
 window.addEventListener('scroll', updateHeader, { passive: true });
 
-toggle?.addEventListener('click', () => {
-  const open = !nav.classList.contains('open');
-  nav.classList.toggle('open', open);
-  toggle.classList.toggle('open', open);
-  toggle.setAttribute('aria-expanded', String(open));
-  toggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
-  document.body.classList.toggle('menu-open', open);
-});
+// The current page is marked in the HTML, including when JavaScript is disabled.
 
-nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
-  nav.classList.remove('open');
-  toggle.classList.remove('open');
-  toggle.setAttribute('aria-expanded', 'false');
-  toggle.setAttribute('aria-label', 'Open navigation');
-  document.body.classList.remove('menu-open');
-}));
-
-const sections = [...document.querySelectorAll('main section[id]')];
-const navLinks = [...document.querySelectorAll('.nav a[href^="#"]')];
-if ('IntersectionObserver' in window) {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      navLinks.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`));
-    });
-  }, { rootMargin: '-35% 0px -60% 0px' });
-  sections.forEach((section) => observer.observe(section));
-}
-
-// Scroll-reveal groups are assigned here to keep the HTML semantic and uncluttered.
-const revealGroups = [
-  ['.section-kicker, .intro-copy, .section-head, .events-top, .join-inner > div, .join-form, .footer-main > *', 'reveal'],
-  ['.stat-grid article, .programme-card, .value-list article, .event-list article, .news-side article', 'reveal'],
-  ['.news-lead', 'reveal reveal-scale']
-];
-
-const revealItems = [];
-revealGroups.forEach(([selector, classes]) => {
-  document.querySelectorAll(selector).forEach((element) => {
-    classes.split(' ').forEach((className) => element.classList.add(className));
-    revealItems.push(element);
-  });
-});
-
-document.querySelectorAll('.stat-grid, .programme-grid, .value-list, .event-list, .news-side').forEach((group) => {
-  [...group.children].forEach((item, index) => item.style.setProperty('--reveal-delay', `${index * 90}ms`));
-});
-
-if (!reduceMotion && 'IntersectionObserver' in window) {
-  const revealObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add('is-visible');
-      observer.unobserve(entry.target);
-    });
-  }, { threshold: 0.13, rootMargin: '0px 0px -45px' });
-  revealItems.forEach((item) => revealObserver.observe(item));
-} else {
-  revealItems.forEach((item) => item.classList.add('is-visible'));
-}
-
-// A small GPU-friendly hero drift adds depth without moving layout elements.
-if (!reduceMotion) {
-  const heroImage = document.querySelector('.hero-image');
-  let ticking = false;
-  const updateHeroDepth = () => {
-    if (heroImage && window.scrollY < window.innerHeight) {
-      heroImage.style.setProperty('--hero-shift', `${Math.min(window.scrollY * 0.1, 70)}px`);
-    }
-    ticking = false;
-  };
-  window.addEventListener('scroll', () => {
-    if (!ticking) {
-      window.requestAnimationFrame(updateHeroDepth);
-      ticking = true;
-    }
-  }, { passive: true });
-}
+// Page content stays visible immediately, including on short viewports and deep links.
 
 document.querySelector('[data-year]').textContent = new Date().getFullYear();
 
@@ -94,6 +73,6 @@ document.querySelector('[data-form]')?.addEventListener('submit', (event) => {
   event.preventDefault();
   const form = event.currentTarget;
   const status = form.querySelector('[data-form-status]');
-  status.textContent = 'Thank you. Online submissions will open soon—please email info@mmasrilanka.lk for now.';
+  status.textContent = 'Thank you. Online submissions will open soon—please email info@mmasrilanka.com for now.';
   form.reset();
 });

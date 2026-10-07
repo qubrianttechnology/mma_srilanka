@@ -18,7 +18,7 @@ The `wrangler.jsonc` file points Wrangler to the generated `dist/` directory and
 Add this production environment variable in Cloudflare when the final domain is known:
 
 ```text
-SITE_URL=https://www.mmasrilanka.lk
+SITE_URL=https://www.mmasrilanka.com
 ```
 
 Every push to `main` will then build and deploy automatically.
@@ -40,7 +40,7 @@ npm run deploy
 ## Motion and interaction
 
 - Sequenced hero entrance and image focus animation
-- IntersectionObserver-powered section reveals with staggered cards
+- Always-visible section content with compact responsive spacing
 - RequestAnimationFrame-throttled hero depth effect
 - Button, card, navigation and event micro-interactions
 - Automatic reduced-motion fallback for accessibility
@@ -62,3 +62,23 @@ npm run deploy
 - XML sitemap and robots file
 - Descriptive image alternative text
 - Responsive layout, reduced-motion support and keyboard navigation
+
+## Website pages
+
+- `index.html`: Home
+- `about.html`: About Us, Vision, Mission and Commitment
+- `programmes.html`: Development programmes
+- `events.html`: Upcoming events
+- `news.html`: Federation updates
+- `contact.html`: Membership and contact
+- `clubs.html`: Directory template; the build generates `/clubs/` and club profiles from `data/clubs.json`
+
+All pages share `styles.css` and `script.js`. Navigation is included in each HTML file, so update header and footer links across all seven pages when changing the menu. The build includes every page in `dist/`; Cloudflare serves the corresponding extension-free URLs listed in the sitemap.
+
+## Affiliated clubs
+
+Club and country pages are generated from `data/clubs.json` at build time. See [data/README.md](data/README.md) for publishing rules, field definitions and Google Search Console steps. Use `npm run dev` to preview generated club pages.
+
+## SEO checks and publication
+
+Run `npm run check:seo` and `npm test` before publishing. See [SEO.md](SEO.md) for the MMA Srilanka keyword map, technical implementation and remaining Search Console steps. Set `GOOGLE_SITE_VERIFICATION` to an actual Search Console HTML token to include it in the generated pages.

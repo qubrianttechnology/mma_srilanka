@@ -10,8 +10,18 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    if (url.pathname === '/index.html' || url.pathname === '/home') {
-      return Response.redirect(new URL('/', url), 301);
+    // Preserve one crawlable URL for each page and retain query strings.
+    if (request.method === 'GET' || request.method === 'HEAD') {
+      const pages = new Set(['about', 'programmes', 'clubs', 'events', 'news', 'contact']);
+      const originalPath = url.pathname;
+      if (originalPath === '/home' || originalPath === '/index.html') url.pathname = '/';
+      else if (originalPath.endsWith('/index.html')) url.pathname = originalPath.slice(0, -10);
+      else {
+        const name = originalPath.slice(1).replace(/\.html$|\/$/g, '');
+        if (pages.has(name)) url.pathname = '/' + name + (name === 'clubs' ? '/' : '');
+        else if (/^\/clubs\/(?:countries\/[a-z]{2}|[a-z0-9]+(?:-[a-z0-9]+)*)$/.test(originalPath)) url.pathname += '/';
+      }
+      if (url.pathname !== originalPath) return Response.redirect(url, 301);
     }
 
     const assetResponse = await env.ASSETS.fetch(request);
@@ -21,9 +31,11 @@ export default {
       headers.set(name, value);
     }
 
-    if (/\.(?:png|svg|webp|jpg|jpeg|gif|ico)$/i.test(url.pathname)) {
+    if (assetResponse.status === 404) headers.set('X-Robots-Tag', 'noindex');
+
+    if (assetResponse.ok && /\.(?:png|svg|webp|jpg|jpeg|gif|ico)$/i.test(url.pathname)) {
       headers.set('Cache-Control', 'public, max-age=604800, stale-while-revalidate=86400');
-    } else if (/\.(?:css|js)$/i.test(url.pathname)) {
+    } else if (assetResponse.ok && /\.(?:css|js)$/i.test(url.pathname)) {
       headers.set('Cache-Control', 'public, max-age=3600, must-revalidate');
     }
 

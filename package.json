@@ -6,7 +6,9 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "dev": "npm run build && wrangler dev",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "npm run build && wrangler deploy",
+    "check:seo": "npm run build && node scripts/seo-check.mjs",
+    "test": "node scripts/clubs.test.mjs && node scripts/worker.test.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.130.0"

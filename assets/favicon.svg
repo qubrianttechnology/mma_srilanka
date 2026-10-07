@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="SL MMA">
-  <rect width="64" height="64" rx="8" fill="#0b0b0c"/>
-  <path d="M6 6h52v52H6z" fill="none" stroke="#e2a328" stroke-width="3"/>
-  <text x="32" y="29" text-anchor="middle" fill="#e2a328" font-family="Arial,sans-serif" font-size="12" font-weight="700">SL</text>
-  <text x="32" y="46" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="17" font-weight="900">MMA</text>
-</svg>

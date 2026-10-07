@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.mmasrilanka.lk/sitemap.xml
+# Search crawlers, including Googlebot and OAI-SearchBot, use the rule above.
+# Hosting firewall and bot protection settings must also permit crawling.
+Sitemap: https://www.mmasrilanka.com/sitemap.xml

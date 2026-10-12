@@ -11,7 +11,7 @@ export function pagePath(file) {
 export function enhanceSeo(html, { file, siteUrl, verification = '' }) {
   const route = pagePath(file);
   const canonical = siteUrl + route;
-  const title = decode(html.match(/<title>([\s\S]*?)<\/title>/)?.[1] || 'MMA Srilanka');
+  const title = decode(html.match(/<title>([\s\S]*?)<\/title>/)?.[1] || 'MMA Sri Lanka');
   const description = decode(html.match(/<meta name="description" content="([^"]*)"/)?.[1] || '');
   html = html.replace(/(<link rel="canonical" href=")[^"]*(")/,(_,a,b)=>a+escapeHtml(canonical)+b)
     .replace(/(<meta property="og:url" content=")[^"]*(")/,(_,a,b)=>a+escapeHtml(canonical)+b);
@@ -23,20 +23,20 @@ export function enhanceSeo(html, { file, siteUrl, verification = '' }) {
   const club = route.startsWith('/clubs/') && schemas.find(item => item['@type'] === 'SportsOrganization' && item.url === canonical);
   const breadcrumb = schemas.find(item => item['@type'] === 'BreadcrumbList');
   const pageType = route === '/about' ? 'AboutPage' : route === '/contact' ? 'ContactPage' : route === '/clubs/' || route.startsWith('/clubs/countries/') || route === '/news' ? 'CollectionPage' : 'WebPage';
-  const graph = [{ '@type': pageType, '@id': canonical + '#webpage', url: canonical, name: title, description, inLanguage:'en-LK', isPartOf:{'@id':websiteId}, publisher:{'@id':orgId}, about: club ? {'@type':'SportsOrganization',name:club.name,url:canonical} : {'@id':orgId} }];
+  const graph = [{ '@type': pageType, '@id': canonical + '#webpage', url: canonical, name: title, description, inLanguage:'en-LK', isPartOf:{'@id':websiteId}, publisher:{'@id':orgId}, about: club ? {'@id':club['@id']} : {'@id':orgId} }];
   if (route === '/' || route === '/about') graph[0].mainEntity = { '@id': orgId };
-  if (route === '/') graph.push({ '@type':'WebSite','@id':websiteId,url:siteUrl+'/',name:'MMA Srilanka',alternateName:['MMA Sri Lanka','Sri Lanka MMA Federation','SLMMAF'],inLanguage:'en-LK',publisher:{'@id':orgId} });
+  if (route === '/') graph.push({ '@type':'WebSite','@id':websiteId,url:siteUrl+'/',name:'MMA Sri Lanka',alternateName:['SLMMAF','Sri Lanka Mixed Martial Arts Federation'],inLanguage:'en-LK',publisher:{'@id':orgId} });
   const label = { '/about':'About SLMMAF', '/programmes':'MMA programmes', '/clubs/':'Affiliated clubs', '/events':'MMA events', '/news':'Federation news', '/contact':'Contact' }[route];
   if (label && route !== '/') {
-    const trail = {'@type':'BreadcrumbList','@id':canonical+'#breadcrumb',itemListElement:[{'@type':'ListItem',position:1,name:'MMA Srilanka',item:siteUrl+'/'},{'@type':'ListItem',position:2,name:label,item:canonical}]};
+    const trail = {'@type':'BreadcrumbList','@id':canonical+'#breadcrumb',itemListElement:[{'@type':'ListItem',position:1,name:'MMA Sri Lanka',item:siteUrl+'/'},{'@type':'ListItem',position:2,name:label,item:canonical}]};
     graph.push(trail);graph[0].breadcrumb={'@id':trail['@id']};
-    html=html.replace('<main id="main">',`<main id="main"><nav class="seo-breadcrumb container" aria-label="Breadcrumb"><a href="/">MMA Srilanka</a><span aria-hidden="true">/</span><span aria-current="page">${escapeHtml(label)}</span></nav>`);
+    html=html.replace('<main id="main">',`<main id="main"><nav class="seo-breadcrumb container" aria-label="Breadcrumb"><a href="/">MMA Sri Lanka</a><span aria-hidden="true">/</span><span aria-current="page">${escapeHtml(label)}</span></nav>`);
   } else if (route.startsWith('/clubs/countries/')) {
     const country = decode(html.match(/<h1[^>]*>[\s\S]*?<em>in ([\s\S]*?)\.<\/em>/)?.[1] || 'Country');
-    graph.push({'@type':'BreadcrumbList','@id':canonical+'#breadcrumb',itemListElement:[{'@type':'ListItem',position:1,name:'MMA Srilanka',item:siteUrl+'/'},{'@type':'ListItem',position:2,name:'Affiliated clubs',item:siteUrl+'/clubs/'},{'@type':'ListItem',position:3,name:country,item:canonical}]});
+    graph.push({'@type':'BreadcrumbList','@id':canonical+'#breadcrumb',itemListElement:[{'@type':'ListItem',position:1,name:'MMA Sri Lanka',item:siteUrl+'/'},{'@type':'ListItem',position:2,name:'Affiliated clubs',item:siteUrl+'/clubs/'},{'@type':'ListItem',position:3,name:country,item:canonical}]});
     graph[0].breadcrumb={'@id':canonical+'#breadcrumb'};
-    html=html.replace('<main id="main">',`<main id="main"><nav class="seo-breadcrumb container" aria-label="Breadcrumb"><a href="/">MMA Srilanka</a><span aria-hidden="true">/</span><a href="/clubs/">Affiliated clubs</a><span aria-hidden="true">/</span><span aria-current="page">${escapeHtml(country)}</span></nav>`);
-  } else if (breadcrumb) graph[0].breadcrumb = breadcrumb;
+    html=html.replace('<main id="main">',`<main id="main"><nav class="seo-breadcrumb container" aria-label="Breadcrumb"><a href="/">MMA Sri Lanka</a><span aria-hidden="true">/</span><a href="/clubs/">Affiliated clubs</a><span aria-hidden="true">/</span><span aria-current="page">${escapeHtml(country)}</span></nav>`);
+  } else if (breadcrumb) graph[0].breadcrumb = { '@id': breadcrumb['@id'] };
   html=html.replace('</head>',`  <script type="application/ld+json">${serialize({'@context':'https://schema.org','@graph':graph})}</script>\n</head>`);
   const emblemPreview = html.includes('property="og:image" content="' + siteUrl + '/assets/slmmaf-logo.png"');
   const additions = [

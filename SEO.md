@@ -1,70 +1,82 @@
-﻿# MMA Srilanka SEO
+﻿# MMA Sri Lanka SEO and owner handoff
 
-The main search topic is **MMA Srilanka**, with the natural spelling **MMA Sri Lanka** used in page content. SLMMAF remains the organization's name. Page titles and descriptions match the actual page topic rather than repeating a keyword list.
+The owner reports that the website appears for “SLMMAF” but is difficult to find for “MMA Sri Lanka”. This is a reported query visibility issue. No authorised Search Console connection is available here, so query performance and Google indexing status have not been inspected. Neither an indexing failure nor a specific ranking cause has been established.
 
-## Page focus
+The website name is **MMA Sri Lanka**. The organisation remains **Sri Lanka Mixed Martial Arts Federation**, abbreviated **SLMMAF**. Existing federation branding and user changes are preserved.
 
-| URL | Topic |
+## Project and routes
+
+This is static HTML/CSS/JavaScript with a Node build, not a client-rendered framework. Cloudflare Workers Static Assets serves `dist/` through `src/index.js`; `wrangler.jsonc` runs the Worker first. `scripts/build.mjs` copies public assets, generates approved club pages, applies SEO metadata and generates the sitemap. GitHub Actions runs the existing checks. No applicable AGENTS.md was found in the checkout or ancestor directories.
+
+| Canonical path | Page |
 | --- | --- |
-| `/` | MMA Srilanka, MMA in Sri Lanka, SLMMAF |
-| `/about` | Sri Lanka Mixed Martial Arts Federation, mission and development |
-| `/programmes` | MMA training, athlete development and coach education in Sri Lanka |
-| `/clubs/` | Affiliated MMA clubs, country directory |
-| `/clubs/countries/lk/` | MMA clubs in Sri Lanka |
-| `/clubs/mma-colombo-combat-club/` | MMA Colombo Combat Club, Colombo / Gampaha |
-| `/events` | MMA Sri Lanka events and development camps |
-| `/news` | MMA Sri Lanka news, athlete welfare, affiliation and coaching |
-| `/contact` | MMA Srilanka contact, membership and club affiliation |
+| `/` | MMA Sri Lanka homepage |
+| `/about` | Federation mission and commitment |
+| `/programmes` | Athlete development, coaching, affiliation and beginner guidance |
+| `/clubs/` | Affiliated club directory |
+| `/clubs/countries/lk/` | Existing Sri Lanka club directory |
+| `/clubs/mma-colombo-combat-club/` | Existing approved club profile |
+| `/events` | Planned camps and education announcements |
+| `/news` | Federation development updates |
+| `/contact` | Contact details and membership enquiries |
 
-## Implemented
+The production origin is `https://mmasrilanka.com`. Top-level pages omit a trailing slash; generated club routes use one. The build converts internal HTML links to canonical routes and preserves fragment anchors. HTML variants and legacy homepage paths redirect permanently, preserving queries. The Worker now combines production HTTP/www and path normalisation in one redirect. Local and workers.dev previews retain their own origins. A www redirect needs working DNS, a certificate and routing to this Worker; code does not provision these.
 
-- Unique page titles, meta descriptions, social sharing titles and descriptions.
-- Consistent public origin: `https://mmasrilanka.com`, configurable with `SITE_URL`.
-- Canonical URLs, internal links to canonical routes, and permanent redirects from HTML/legacy variants.
-- WebSite site-name markup on the home page, with MMA Srilanka / MMA Sri Lanka as site-name variants.
-- SportsOrganization and WebPage/AboutPage/ContactPage/CollectionPage structured data; real club details and breadcrumbs.
-- Visible breadcrumbs on inner pages; substantive news sections behind reading links.
-- A sitemap containing each published page, including approved club and country profiles; consistent robots.txt.
-- Real 404 responses remain 404 and receive a noindex header; missing assets do not receive long cache lifetimes.
-- Existing responsive layout, deferred scripts, image dimensions, hero preloading and immediate visibility of primary content.
-- No fabricated ratings, event dates, addresses, qualifications, publication dates or social profiles.
+## Completed changes
 
-`npm run check:seo` builds and validates every page's metadata, canonical, local links, anchors, heading structure, structured data and sitemap coverage. `npm test` checks club publication rules and Worker redirects/404 behavior.
+- Set the exact homepage title to “MMA Sri Lanka | Sri Lanka Mixed Martial Arts Federation”.
+- Set the homepage description to “Explore MMA in Sri Lanka with SLMMAF: affiliated clubs, athlete development, coaching programmes, federation news and upcoming events.” This reflects existing content; unconfirmed event details remain explicit.
+- Standardised the website name in visible copy, metadata, generated breadcrumbs, club titles, WebSite markup and the manifest. All seven source pages have distinct titles/descriptions; generated club pages retain distinct metadata.
+- Aligned Open Graph and Twitter titles/descriptions with each page, retaining existing suitable images. The homepage's square federation emblem uses a Twitter summary card.
+- Made the homepage's relationship to SLMMAF explicit. Preserved one main heading per page and the existing layout, beginner guide and membership enquiry functionality.
+- Added athlete/coaching anchors and contextual links among programmes, clubs, events, news and contact. Clarified programme enquiries and unpublished event details. Removed the unsupported event mailing-list signup promise; the contact form prepares an email draft.
+- Retained the federation SportsOrganization entity (an Organization subtype), logo, contact details and stable identifier. Corrected the single homepage WebSite entity to MMA Sri Lanka, with the full federation name and SLMMAF as alternatives. Club pages reference their own stable organisation entity and the federation identifier. No verified official social profiles were supplied, so no federation sameAs links were invented.
+- Preserved valid robots.txt and sitemap configuration. The build lists only published canonical pages without fabricated modification dates. Draft, suspended and expired club records remain excluded.
+- Added production HTTPS/www and additional homepage redirects. Kept missing pages as 404 responses with noindex. No public administrative pages exist in the asset bundle; source scripts and club data are not served.
+- Strengthened existing SEO and Worker checks for homepage metadata, names, sharing metadata, indexability, schema definitions, images, redirects and sitemap coverage.
 
-## Production steps
+Files edited for this task: all seven HTML source pages; `scripts/seo.mjs`, `scripts/clubs.mjs`, `scripts/seo-check.mjs`, `scripts/worker.test.mjs`; `src/index.js`; `site.webmanifest`; `README.md`; and this file. Existing changes to `styles.css` and `script.js` were left intact. No deployment, Git push, external website edit, Search Console submission or ranking measurement was performed.
 
-1. Deploy the built website to the public domain. `SITE_URL` must match the real primary origin.
-2. Verify domain ownership in Google Search Console. A DNS verification record must be installed through the domain provider, or set the `GOOGLE_SITE_VERIFICATION` build environment variable to the actual HTML verification token. No token is generated or fabricated by this project.
-3. Submit `https://mmasrilanka.com/sitemap.xml` in Search Console and inspect the home, club directory and club profile URLs. Redirect any separately hosted alternate hostname to the primary hostname in the hosting/domain configuration.
-4. Monitor the Search Console indexing and performance reports after deployment. Update approved clubs and publish factual event dates and substantive news as they become available.
-5. Run PageSpeed Insights against the live domain to measure real delivery and Core Web Vitals. Field performance and external backlinks are not verified by the local build checks.
+## Verification
 
-No deployment, Search Console verification/submission, live ranking claim or indexation guarantee is included in these code changes. Google decides whether and how pages appear.
+Verified locally on 12 October 2026:
 
-### Sitemap fetch troubleshooting
+- `npm run check:seo` passed: build and all nine generated pages, unique metadata, canonicals, social tags, robots directives, main headings, JSON-LD, links, anchors and sitemap coverage.
+- `npm test` passed: club publication/validation, escaping, Worker path/origin redirects, query preservation, HEAD handling, preview behaviour and 404 indexing rules.
+- Cloudflare's local Worker preview returned 200 without noindex for all sitemap URLs, robots.txt and sitemap.xml. Redirect targets/queries passed. Unpublished administrative/source paths returned 404 with noindex.
+- Browser checks passed on all nine pages at 320, 390, 768 and 1440 pixels without horizontal overflow or missing headings/images. Content and metadata remained readable with JavaScript disabled. Mobile navigation worked. Homepage mobile/desktop screenshots were visually inspected. Evidence is in ignored `.preview/seo-verification.cjs` and `.preview/seo-home-390.png` / `.preview/seo-home-1440.png`.
+- Existing live production robots.txt, sitemap and all nine sitemap URLs returned 200; canonicals matched the sitemap. Existing /home and /index.html redirects worked. At inspection, HTTP served content without an HTTPS redirect and www did not resolve. Confirm both after deployment/hostname configuration. These observations do not establish Google indexing or ranking status.
 
-The primary origin is `https://mmasrilanka.com`. Set Cloudflare Workers Builds' production `SITE_URL` to that exact origin (or remove the override to use the build default), then deploy. The build also normalizes a legacy www override to the primary origin so the sitemap, canonical URLs and social metadata stay consistent. The hostname must have working DNS and serve the website; `SITE_URL` does not configure DNS.
+## Owner actions after deployment
 
-In Search Console, select the `mmasrilanka.com` Domain property or the `https://mmasrilanka.com/` URL-prefix property. Inspect `https://mmasrilanka.com/sitemap.xml` with **Test live URL** and check **Crawl allowed? Yes** and **Page fetch: Successful**. Expand a failed fetch to see its exact reason before changing hosting rules. After a successful live test, resubmit `https://mmasrilanka.com/sitemap.xml`. See [Google's sitemap fetch troubleshooting](https://support.google.com/webmasters/answer/7451001#sitemap_fetch_errors).
+### Deploy and verify production
 
-Official references:
-- https://developers.google.com/search/docs/fundamentals/seo-starter-guide
-- https://developers.google.com/search/docs/appearance/site-names
-- https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview
+Review and deploy through the existing Cloudflare workflow. Run `npm test` and `npm run check:seo`, then use Workers Builds or `npm run deploy`. Set production `SITE_URL=https://mmasrilanka.com` or leave it unset for the default. Confirm sitemap pages return public 200 responses without noindex. Test HTTP and /index.html redirects. If enabling www, configure its DNS, certificate and Worker custom domain, then confirm its redirect. Ensure bot/firewall settings permit crawling.
 
-## AI search discovery
+### Compare the reported queries
 
-The home and About page identify the federation as their main entity using the same organization ID. The About page provides the full name, abbreviation, website, activities and contact details in visible HTML. The existing wildcard robots.txt rule allows search crawlers, including OAI-SearchBot and Googlebot; adding agent-specific allow rules is unnecessary.
+1. Open the verified `mmasrilanka.com` Domain property or `https://mmasrilanka.com/` URL-prefix property in Google Search Console. If necessary, verify through DNS, or set `GOOGLE_SITE_VERIFICATION` to the actual supplied HTML token before building; no token is generated by this project.
+2. Open **Performance → Search results**, select **Search type: Web** and **Last 3 months**. Enable **Total clicks**, **Total impressions**, **Average CTR** and **Average position**.
+3. Add **Query → Custom (regex) → Matches regex** with `^(mma sri lanka|slmmaf)$`. Compare the exact queries in the **Queries** table and export a baseline. Matching is case insensitive by default.
+4. Add **Country → Sri Lanka**, retain the query filter and export this baseline separately. Remove the country filter to return to worldwide data. The **Pages** tab shows which URLs receive impressions; optionally filter to the exact homepage URL.
+5. After deployment, compare equal date ranges, such as the last 28 days and previous 28 days, using the same filters. Record the deployment date. Missing query rows may reflect limited/anonymised data, not lack of indexing. Average position is an aggregate, not a fixed rank for every searcher.
 
-After deployment:
+See Google's [performance metrics](https://support.google.com/webmasters/answer/7576553) and [filtering instructions](https://support.google.com/webmasters/answer/17011165).
 
-1. Check that the home page, About page, robots.txt and sitemap return public HTTP 200 responses without login or bot challenges. Check Cloudflare settings and crawler logs as well as robots.txt. Verify OpenAI crawler traffic against the IP ranges published in its documentation before changing firewall rules.
-2. Complete the Search Console verification and sitemap submission above. Verify the domain in Bing Webmaster Tools and submit the same sitemap there.
-3. Keep federation names and website links consistent on real official profiles. Add verified external profile URLs to organization `sameAs` markup only when supplied and confirmed. Publish factual leadership, governance, recognition and event information with supporting sources when available.
-4. Monitor indexing reports and actual source links in AI search answers. Answer wording and inclusion vary; manual searches are observations, not proof of universal visibility.
+### Inspect the homepage and request indexing
 
-These changes improve discoverability, but do not train ChatGPT, Gemini or other models, force recommendations, or guarantee citations. Google Search AI guidance concerns its Search features and does not guarantee Gemini app answers. No special AI text file or special AI schema is required for Google's AI Search features. Deployment and account-based submissions have not been performed by this change.
+Paste `https://mmasrilanka.com/` into **URL Inspection**. Review indexed status, last crawl, crawl/indexing permissions, user-declared canonical and Google-selected canonical. Select **Test live URL**; check successful fetch and eligibility, then view the tested HTML/screenshot for updated metadata and copy. The live test does not establish that the update is indexed. After a successful post-deployment test, select **Request indexing**. Inspect other changed pages as needed. See Google's [URL Inspection instructions](https://support.google.com/webmasters/answer/9012289).
 
-Official AI search references:
-- https://developers.openai.com/api/docs/bots
-- https://developers.google.com/search/docs/appearance/ai-features
+### Submit the working sitemap
+
+Confirm `https://mmasrilanka.com/sitemap.xml` serves XML with canonical public URLs. In **Sitemaps → Add a new sitemap**, enter that URL (or `sitemap.xml` if the property prefix is prefilled), then **Submit**. Confirm **Success**; inspect error details if fetching fails. Monitor the Page indexing report. Submission does not guarantee indexing. See Google's [Sitemaps instructions](https://support.google.com/webmasters/answer/7451001).
+
+### Obtain relevant federation links
+
+Ask MMA Colombo and other approved affiliated club website owners to add a contextual link, such as “Sri Lanka Mixed Martial Arts Federation (SLMMAF) — MMA Sri Lanka”, pointing to `https://mmasrilanka.com/`. A club can also link to its existing federation profile. Describe only confirmed affiliations. No external club website source or verified website URL is available here, so no backlink or external website URL was invented or published. No outreach messages were sent.
+
+### Supply factual information
+
+Provide confirmed programme availability, eligibility, fees, intakes and qualification details; event dates, venues, registration links and organisers; substantive news with factual dates/results; club venues, timetables and official website URLs; and confirmed federation profile links for sameAs markup. Recognition or international affiliation claims need supporting evidence before publication. Keep approved club records current and rebuild after changes.
+
+Search visibility changes take time while search engines recrawl and reassess pages. Structured data explains names and relationships; it does not guarantee higher rankings. First-page rankings cannot be guaranteed. Google's [site-name guidance](https://developers.google.com/search/docs/appearance/site-names) covers consistent naming and recrawl timing.

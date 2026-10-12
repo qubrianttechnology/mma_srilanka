@@ -74,7 +74,7 @@ npm run deploy
 
 - Confirm the official domain and set the Cloudflare `SITE_URL` production environment variable.
 - Confirm the official federation name, email address, social profiles, governance statements, statistics, and programme details.
-- Connect the interest form in `script.js` to the federation's approved form or CRM endpoint.
+- The interest form opens a prepared email to `info@mmasrilanka.com`; visitors must send it from their email app. Confirm this inbox is monitored before launch.
 - Add verified event dates and news articles as they become available.
 - For best social sharing, export a dedicated 1200 × 630 Open Graph image.
 
@@ -87,6 +87,12 @@ npm run deploy
 - XML sitemap and robots file
 - Descriptive image alternative text
 - Responsive layout, reduced-motion support and keyboard navigation
+
+## Membership enquiries and beginner guidance
+
+The contact page includes role-specific membership enquiries, a three-step explanation and a beginner FAQ. The programmes page includes a beginner guide linked from the home page. Confirmed fees, eligibility rules and membership benefits can be added once the federation supplies them.
+
+The enquiry form validates the required name, email and role, then opens a `mailto:` draft addressed to `info@mmasrilanka.com`. Phone, location and a short message are optional. Visitors must review and send the email themselves; opening a draft is not a submission or membership confirmation. Their entries remain available on the page, with a copyable draft if an email app is unavailable. Editing a field clears the old draft so it can be regenerated. No form data is posted to the Worker or saved by the website. Without JavaScript, the page provides direct email instructions.
 
 ## Website pages
 
@@ -106,4 +112,4 @@ Club and country pages are generated from `data/clubs.json` at build time. See [
 
 ## SEO checks and publication
 
-Run `npm run check:seo` and `npm test` before publishing. See [SEO.md](SEO.md) for the MMA Srilanka keyword map, technical implementation and remaining Search Console steps. Set `GOOGLE_SITE_VERIFICATION` to an actual Search Console HTML token to include it in the generated pages.
+Run `npm run check:seo` and `npm test` before publishing. See [SEO.md](SEO.md) for the MMA Sri Lanka implementation, verification results and exact owner steps for Search Console query comparisons, indexing and sitemap submission. Set `GOOGLE_SITE_VERIFICATION` to an actual Search Console HTML token to include it in the generated pages.

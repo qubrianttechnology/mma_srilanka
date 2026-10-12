@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Contact MMA Srilanka | Membership &amp; Club Affiliation</title>
-  <meta name="description" content="Contact SLMMAF for MMA Sri Lanka membership, club affiliation, coaching and athlete enquiries. Call 0726 191 191 or email info@mmasrilanka.com.">
+  <title>Contact MMA Sri Lanka | SLMMAF Membership &amp; Club Affiliation</title>
+  <meta name="description" content="Contact the Sri Lanka Mixed Martial Arts Federation for membership, club affiliation, athlete and coaching enquiries. Find contact details and joining guidance.">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#0b0b0c">
   <link rel="canonical" href="https://mmasrilanka.com/contact">
@@ -13,15 +13,15 @@
 
   <meta property="og:type" content="website">
   <meta property="og:locale" content="en_LK">
-  <meta property="og:title" content="Contact MMA Srilanka | Membership &amp; Club Affiliation">
-  <meta property="og:description" content="Contact SLMMAF for MMA Sri Lanka membership, club affiliation, coaching and athlete enquiries. Call 0726 191 191 or email info@mmasrilanka.com.">
+  <meta property="og:title" content="Contact MMA Sri Lanka | SLMMAF Membership &amp; Club Affiliation">
+  <meta property="og:description" content="Contact the Sri Lanka Mixed Martial Arts Federation for membership, club affiliation, athlete and coaching enquiries. Find contact details and joining guidance.">
   <meta property="og:url" content="https://mmasrilanka.com/contact">
-  <meta property="og:site_name" content="MMA Srilanka">
+  <meta property="og:site_name" content="MMA Sri Lanka">
   <meta property="og:image" content="https://mmasrilanka.com/assets/mma-hero.png">
   <meta property="og:image:alt" content="Sri Lankan mixed martial artists training in a professional cage">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Contact MMA Srilanka | Membership &amp; Club Affiliation">
-  <meta name="twitter:description" content="Contact SLMMAF for MMA Sri Lanka membership, club affiliation, coaching and athlete enquiries. Call 0726 191 191 or email info@mmasrilanka.com.">
+  <meta name="twitter:title" content="Contact MMA Sri Lanka | SLMMAF Membership &amp; Club Affiliation">
+  <meta name="twitter:description" content="Contact the Sri Lanka Mixed Martial Arts Federation for membership, club affiliation, athlete and coaching enquiries. Find contact details and joining guidance.">
   <meta name="twitter:image" content="https://mmasrilanka.com/assets/mma-hero.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -65,7 +65,7 @@
   <a class="skip-link" href="#main">Skip to main content</a>
 
   <header class="site-header" data-header>
-    <div class="container nav-wrap"><a class="brand" href="index.html" aria-label="Sri Lanka MMA Federation home">
+    <div class="container nav-wrap"><a class="brand" href="index.html" aria-label="MMA Sri Lanka, SLMMAF home">
         <img class="brand-logo" src="assets/slmmaf-logo.png" alt="Sri Lanka MMA Federation emblem" width="72" height="72">
         <span class="brand-copy"><strong>Sri Lanka</strong><small>Mixed Martial Arts Federation</small></span>
       </a>
@@ -82,7 +82,7 @@
     </div>
   </header>
   <aside class="sidebar" id="site-sidebar" aria-label="Site navigation" data-sidebar>
-    <div class="sidebar-brand"><a class="brand" href="index.html" aria-label="Sri Lanka MMA Federation home">
+    <div class="sidebar-brand"><a class="brand" href="index.html" aria-label="MMA Sri Lanka, SLMMAF home">
         <img class="brand-logo" src="assets/slmmaf-logo.png" alt="Sri Lanka MMA Federation emblem" width="72" height="72">
         <span class="brand-copy"><strong>Sri Lanka</strong><small>Mixed Martial Arts Federation</small></span>
       </a><button class="sidebar-close" type="button" aria-label="Close navigation" data-menu-close>&#215;</button></div>
@@ -103,14 +103,52 @@
   <main id="main">
     <section class="join" id="contact" aria-labelledby="join-title">
       <div class="container join-inner">
-        <div><div class="section-kicker light"><span>06</span> Join the movement</div><h1 class="page-title" id="join-title">Contact<br><em>MMA Srilanka.</em></h1><address class="contact-details"><a href="tel:+94726191191"><span>Call us</span>0726 191 191</a><a href="mailto:info@mmasrilanka.com"><span>Email us</span>info@mmasrilanka.com</a></address></div>
-        <form class="join-form" data-form>
-          <p>Register your interest as an athlete, coach, official or affiliated club.</p>
-          <div class="field-row"><label><span>Your name</span><input name="name" autocomplete="name" required placeholder="Full name"></label><label><span>Email address</span><input type="email" name="email" autocomplete="email" required placeholder="you@example.com"></label></div>
+        <div><div class="section-kicker light"><span>06</span> Join the movement</div><h1 class="page-title" id="join-title">Contact<br><em>MMA Sri Lanka.</em></h1><address class="contact-details"><a href="tel:+94726191191"><span>Call us</span>0726 191 191</a><a href="mailto:info@mmasrilanka.com"><span>Email us</span>info@mmasrilanka.com</a></address></div>
+        <form class="join-form" data-form aria-describedby="enquiry-help" hidden>
+          <p id="enquiry-help">Tell us how you would like to get involved. This form prepares an email to info@mmasrilanka.com. Review it in your email app and press Send to contact us.</p>
+          <div class="field-row"><label><span>Your name</span><input name="name" autocomplete="name" required maxlength="100" placeholder="Full name"></label><label><span>Email address</span><input type="email" name="email" autocomplete="email" required maxlength="254" placeholder="you@example.com"></label></div>
+          <div class="field-row"><label><span>Phone (optional)</span><input type="tel" name="phone" autocomplete="tel" maxlength="30" placeholder="Your contact number"></label><label><span>City / district (optional)</span><input name="city" autocomplete="address-level2" maxlength="80" placeholder="Where you train or live"></label></div>
           <label><span>I'm interested as a</span><select name="interest" required><option value="">Select an option</option><option>Athlete</option><option>Coach</option><option>Official</option><option>Club representative</option><option>Partner</option></select></label>
-          <button class="button button-primary" type="submit">Register interest <span>↗</span></button>
+          <label><span>Message (optional)</span><textarea name="message" rows="4" maxlength="800" placeholder="Tell us about your experience, club or enquiry."></textarea></label>
+          <p class="form-note">Include only the details needed for your enquiry. You can edit the email before sending. A membership enquiry does not confirm registration.</p>
+          <button class="button button-primary" type="submit">Open email draft <span aria-hidden="true">↗</span></button>
           <p class="form-status" role="status" aria-live="polite" data-form-status></p>
+          <div class="email-draft" data-email-draft hidden>
+            <p>Email app did not open? Copy this draft into your email service and send it to <a href="mailto:info@mmasrilanka.com">info@mmasrilanka.com</a>.</p>
+            <label><span>Your email draft</span><textarea rows="9" readonly data-draft-text></textarea></label>
+            <div class="draft-actions"><a class="arrow-link light-link" href="mailto:info@mmasrilanka.com" data-email-link>Open draft again <span aria-hidden="true">↗</span></a><button class="button" type="button" data-copy-draft>Copy email draft</button></div>
+          </div>
         </form>
+        <noscript><p>Email <a href="mailto:info@mmasrilanka.com">info@mmasrilanka.com</a> with your name, contact details and whether you are enquiring as an athlete, coach, official, club representative or partner.</p></noscript>
+      </div>
+    </section>
+    <section class="section membership-section" id="membership" aria-labelledby="membership-title">
+      <div class="container">
+        <div class="section-kicker"><span>01</span> Membership enquiries</div>
+        <div class="support-heading"><h2 id="membership-title">Find your place.<br><em>Take the next step.</em></h2><p>Explore a pathway that matches your role. Contact the federation to confirm current membership options, requirements and any applicable fees.</p></div>
+        <div class="membership-grid">
+          <article><h3>Athletes</h3><p>Ask about getting started, training opportunities and the steps towards competition.</p><a href="#contact" data-interest="Athlete">Enquire as an athlete <span aria-hidden="true">↗</span></a></article>
+          <article><h3>Coaches &amp; officials</h3><p>Ask about education programmes, upcoming intakes and participation requirements.</p><a href="#contact" data-interest="Coach">Coaching enquiries <span aria-hidden="true">↗</span></a><a href="#contact" data-interest="Official">Officiating enquiries <span aria-hidden="true">↗</span></a></article>
+          <article><h3>Clubs &amp; partners</h3><p>Discuss club affiliation, directory listings or ways to support MMA development.</p><a href="#contact" data-interest="Club representative">Club affiliation enquiries <span aria-hidden="true">↗</span></a><a href="#contact" data-interest="Partner">Partnership enquiries <span aria-hidden="true">↗</span></a></article>
+        </div>
+        <ol class="joining-steps">
+          <li><strong>Introduce yourself</strong><p>Choose your role and tell us what you would like to do.</p></li>
+          <li><strong>Send your enquiry</strong><p>Review the prepared email and send it from your email app.</p></li>
+          <li><strong>Confirm the next steps</strong><p>Ask the federation to confirm eligibility, documents, fees and available opportunities before applying.</p></li>
+        </ol>
+      </div>
+    </section>
+    <section class="section faq-section" id="faq" aria-labelledby="faq-title">
+      <div class="container support-layout">
+        <div><div class="section-kicker"><span>02</span> Your questions</div><h2 id="faq-title">Before you<br><em>get started.</em></h2><p>New to the sport? Read our <a href="programmes.html#beginner-guide">beginner guide</a> for a practical first step.</p></div>
+        <div class="faq-list">
+          <details><summary>Do I need experience to enquire?</summary><p>You can contact us at any experience level. Tell us whether you are new to MMA or already train, so you can ask about a suitable club or programme.</p></details>
+          <details><summary>How do I find a club near me?</summary><p>Browse the <a href="clubs.html">affiliated club directory</a> and contact a club to confirm its exact venue, training timetable and beginner availability. If your area is not listed, send the federation your city or district.</p></details>
+          <details><summary>What are the membership fees and requirements?</summary><p>Fees and eligibility details are not published here yet. Contact the federation for the current requirements, any fees and the application process for your role.</p></details>
+          <details><summary>Can children and young people take part?</summary><p>A parent or guardian should contact the federation or club to ask about age requirements, supervision and available junior sessions before arranging participation.</p></details>
+          <details><summary>Does this form register me as a member?</summary><p>No. It prepares an enquiry email. You need to press Send in your email app, then confirm the application process with the federation. Membership and event entries require separate confirmation.</p></details>
+          <details><summary>How do I join a camp or certification programme?</summary><p>Check the <a href="events.html">events page</a> for announcements. If registration details have not been published, email the federation with the programme you are interested in.</p></details>
+        </div>
       </div>
     </section>
   </main>

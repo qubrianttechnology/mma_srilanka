@@ -381,6 +381,52 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, .sidebar::-webkit-scrollbar { 
   animation: none; opacity: 1;
 }
 
+/* Membership enquiries and beginner guidance. */
+.support-heading, .support-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: start; }
+.support-heading { margin-bottom: 30px; }
+.support-heading h2, .support-layout h2 { font-size: clamp(38px, 5.3vw, 64px); line-height: 1.05; letter-spacing: -.8px; margin: 0; }
+.support-heading h2 em, .support-layout h2 em { color: #80561b; }
+.support-heading p, .support-layout > div > p { color: #57534e; max-width: 560px; }
+.support-heading p { margin: 0; }
+.membership-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.membership-grid article { padding: 26px; border: 1px solid var(--line); background: #fff9; }
+.membership-grid h3, .clubs-callout h3 { font: 700 30px/1.1 var(--display); text-transform: uppercase; margin: 0 0 12px; }
+.membership-grid p, .joining-steps p { font-size: 14px; color: #57534e; }
+.membership-grid a { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 12px; border-top: 1px solid var(--line); color: var(--red); font-size: 13px; font-weight: 600; }
+.joining-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px; padding: 28px 0 0; margin: 28px 0 0; border-top: 1px solid var(--line); list-style: none; counter-reset: joining; }
+.joining-steps li { counter-increment: joining; }
+.joining-steps li::before { content: "0" counter(joining); display: block; color: var(--red); font: 700 16px var(--display); margin-bottom: 12px; }
+.joining-steps strong { font-size: 15px; }
+.joining-steps p { margin-bottom: 0; }
+.joining-steps a, .faq-section p a { color: var(--red); text-decoration: underline; text-underline-offset: 3px; }
+.faq-section, .beginner-section { background: #eee8dc; border-top: 1px solid var(--line); }
+.faq-list { border-top: 1px solid var(--line); }
+.faq-list details { border-bottom: 1px solid var(--line); }
+.faq-list summary { padding: 20px 4px; font-size: 15px; font-weight: 600; cursor: pointer; }
+.faq-list summary::marker { color: var(--red); }
+.faq-list p { color: #57534e; font-size: 14px; margin: 0; padding: 0 4px 22px; }
+.faq-list details[open] summary { color: var(--red); }
+.join-form, .join-form label { min-width: 0; }
+.join-form textarea { display: block; width: 100%; max-width: 100%; border: 1px solid #b895815c; border-radius: 0; background: #ffffff06; color: white; padding: 13px 12px; font: inherit; resize: vertical; }
+.join-form textarea::placeholder { color: #c4a9a4; }
+.join-form .form-note { font-size: 12px; line-height: 1.7; }
+.email-draft { border-top: 1px solid #b895815c; margin-top: 24px; padding-top: 20px; }
+.email-draft p { font-size: 13px; overflow-wrap: anywhere; }
+.email-draft p a { text-decoration: underline; }
+.email-draft textarea { font-size: 13px; line-height: 1.6; background: #0002; }
+.draft-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; }
+.draft-actions .button { margin: 0; min-width: 0; }
+textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+@media (max-width: 900px) {
+  .support-heading, .support-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .membership-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  .joining-steps { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .membership-grid article { padding: 22px; }
+  .support-heading h2, .support-layout h2 { font-size: clamp(38px, 9vw, 52px); }
+}
+
 /* Home hero: federation emblem beside the introduction, without a background photo. */
 .hero--emblem { display: flex; flex-direction: column; height: auto; min-height: 760px; max-height: none; padding-bottom: 28px; background: radial-gradient(ellipse at 85% 45%, #311416 0%, #100c0b 38%, #080809 72%); }
 .hero--emblem .hero-inner { flex: 1; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: center; gap: 32px; padding-top: 145px; padding-bottom: 42px; }

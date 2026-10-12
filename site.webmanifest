@@ -1,7 +1,7 @@
 {
-  "name": "Sri Lanka Mixed Martial Arts Federation",
-  "short_name": "SL MMA",
-  "description": "The national platform for mixed martial arts development in Sri Lanka.",
+  "name": "MMA Sri Lanka",
+  "short_name": "MMA Sri Lanka",
+  "description": "MMA Sri Lanka - the website of the Sri Lanka Mixed Martial Arts Federation (SLMMAF).",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

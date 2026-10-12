@@ -14,14 +14,21 @@ export default {
     if (request.method === 'GET' || request.method === 'HEAD') {
       const pages = new Set(['about', 'programmes', 'clubs', 'events', 'news', 'contact']);
       const originalPath = url.pathname;
-      if (originalPath === '/home' || originalPath === '/index.html') url.pathname = '/';
+      const originalOrigin = url.origin;
+      // Apply the production origin policy without redirecting local previews or workers.dev.
+      if (url.hostname === 'mmasrilanka.com' || url.hostname === 'www.mmasrilanka.com') {
+        url.protocol = 'https:';
+        url.hostname = 'mmasrilanka.com';
+        url.port = '';
+      }
+      if (/^\/(?:home|index)(?:\.html|\/)?$/.test(originalPath)) url.pathname = '/';
       else if (originalPath.endsWith('/index.html')) url.pathname = originalPath.slice(0, -10);
       else {
         const name = originalPath.slice(1).replace(/\.html$|\/$/g, '');
         if (pages.has(name)) url.pathname = '/' + name + (name === 'clubs' ? '/' : '');
         else if (/^\/clubs\/(?:countries\/[a-z]{2}|[a-z0-9]+(?:-[a-z0-9]+)*)$/.test(originalPath)) url.pathname += '/';
       }
-      if (url.pathname !== originalPath) return Response.redirect(url, 301);
+      if (url.pathname !== originalPath || url.origin !== originalOrigin) return Response.redirect(url, 301);
     }
 
     const assetResponse = await env.ASSETS.fetch(request);

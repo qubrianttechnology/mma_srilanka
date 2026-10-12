@@ -111,9 +111,9 @@ export function renderClubs({ data, template, siteUrl, today = new Date().toISOS
   }
   for(const club of clubs){
     const path=clubPath(club);const url=`${siteUrl}/${path}`;
-    let html=metadata(base,`${club.name} | MMA Srilanka`,`${club.name} is an SLMMAF affiliated MMA club in ${location(club)}. View affiliation details, training disciplines and public contact information.`,url);
+    let html=metadata(base,`${club.name} | MMA Sri Lanka`,`${club.name} is an SLMMAF affiliated MMA club in ${location(club)}. View the club profile, location and public contact information.`,url);
     html=html.replace(/<main id="main">[\s\S]*?<\/main>/,()=>profileContent(club));
-    const organization={'@context':'https://schema.org','@type':'SportsOrganization',name:club.name,url,description:club.description,sport:'Mixed Martial Arts',memberOf:{'@type':'SportsOrganization',name:'Sri Lanka Mixed Martial Arts Federation',url:siteUrl+'/'},address:{'@type':'PostalAddress',addressLocality:club.city,addressCountry:club.countryCode}};
+    const organization={'@context':'https://schema.org','@type':'SportsOrganization','@id':url+'#organization',name:club.name,url,description:club.description,sport:'Mixed Martial Arts',memberOf:{'@id':siteUrl+'/#organization'},address:{'@type':'PostalAddress',addressLocality:club.city,addressCountry:club.countryCode}};
     if(club.region)organization.address.addressRegion=club.region;
     if(club.streetAddress)organization.address.streetAddress=club.streetAddress;
     if(club.postalCode)organization.address.postalCode=club.postalCode;
@@ -122,7 +122,7 @@ export function renderClubs({ data, template, siteUrl, today = new Date().toISOS
     if(club.website)organization.sameAs=[club.website];
     if(club.affiliationNumber)organization.identifier={'@type':'PropertyValue',propertyID:'SLMMAF affiliation number',value:club.affiliationNumber};
     html=schema(html,organization);
-    html=schema(html,{'@context':'https://schema.org','@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Affiliated clubs',item:siteUrl+'/clubs/'},{'@type':'ListItem',position:2,name:club.country,item:`${siteUrl}/${countryPath(club)}`},{'@type':'ListItem',position:3,name:club.name,item:url}]});
+    html=schema(html,{'@context':'https://schema.org','@type':'BreadcrumbList','@id':url+'#breadcrumb',itemListElement:[{'@type':'ListItem',position:1,name:'Affiliated clubs',item:siteUrl+'/clubs/'},{'@type':'ListItem',position:2,name:club.country,item:`${siteUrl}/${countryPath(club)}`},{'@type':'ListItem',position:3,name:club.name,item:url}]});
     pages.set(path+'index.html',html);paths.push(path);
   }
   return { pages, paths, count: clubs.length };

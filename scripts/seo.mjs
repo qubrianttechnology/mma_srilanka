@@ -41,8 +41,8 @@ export function enhanceSeo(html, { file, siteUrl, verification = '' }) {
   const emblemPreview = html.includes('property="og:image" content="' + siteUrl + '/assets/slmmaf-logo.png"');
   const additions = [
     '<meta property="og:image:type" content="image/png">',
-    `<meta property="og:image:width" content="${emblemPreview ? 1254 : 1983}">`,
-    `<meta property="og:image:height" content="${emblemPreview ? 1254 : 793}">`,
+    `<meta property="og:image:width" content="${emblemPreview ? 1024 : 1983}">`,
+    `<meta property="og:image:height" content="${emblemPreview ? 1024 : 793}">`,
     `<meta name="twitter:image:alt" content="${emblemPreview ? 'Sri Lanka Mixed Martial Arts Federation emblem' : 'Mixed martial artists training together in a cage'}">`
   ];
   if (verification) additions.push(`<meta name="google-site-verification" content="${escapeHtml(verification)}">`);

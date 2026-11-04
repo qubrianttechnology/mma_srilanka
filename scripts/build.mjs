@@ -39,7 +39,8 @@ const files = [
   'script.js',
   'robots.txt',
   'sitemap.xml',
-  'site.webmanifest'
+  'site.webmanifest',
+  'favicon.png'
 ];
 
 const clubData = JSON.parse((await readFile(join(root, 'data/clubs.json'), 'utf8')).replace(/^\uFEFF/, ''));

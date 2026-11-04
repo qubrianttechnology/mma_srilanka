@@ -69,61 +69,49 @@ window.addEventListener('scroll', updateHeader, { passive: true });
 
 document.querySelector('[data-year]').textContent = new Date().getFullYear();
 
-const enquiryForm = document.querySelector('[data-form]');
-if (enquiryForm) {
-  const form = enquiryForm;
-  const status = form.querySelector('[data-form-status]');
-  const draft = form.querySelector('[data-email-draft]');
-  const draftText = form.querySelector('[data-draft-text]');
-  const emailLink = form.querySelector('[data-email-link]');
-  const nameField = form.elements.namedItem('name');
+const registrationForm = document.querySelector('[data-form]');
+if (registrationForm) {
+  const status = registrationForm.querySelector('[data-form-status]');
+  const submitButton = registrationForm.querySelector('button[type="submit"]');
+  const programme = registrationForm.elements.namedItem('programme');
+  const requestedProgramme = new URLSearchParams(window.location.search).get('programme');
+  let requestId;
+  if ([...programme.options].some(option => option.value === requestedProgramme)) {
+    programme.value = requestedProgramme;
+  }
 
-  const clearDraft = () => {
-    nameField.setCustomValidity('');
-    draft.hidden = true;
-    draftText.value = '';
-    emailLink.href = 'mailto:info@mmasrilanka.com';
-    status.textContent = '';
-  };
-  form.addEventListener('input', clearDraft);
-  form.addEventListener('change', clearDraft);
-  form.addEventListener('submit', event => {
+  registrationForm.addEventListener('submit', async event => {
     event.preventDefault();
-    nameField.setCustomValidity(nameField.value.trim() ? '' : 'Please enter your name.');
-    if (!form.reportValidity()) return;
-    const data = new FormData(form);
-    const value = key => String(data.get(key) || '').trim();
-    const subject = `SLMMAF membership enquiry — ${value('interest')}`;
-    const body = [
-      'Hello SLMMAF,', '', 'I would like to enquire about getting involved.', '',
-      `Name: ${value('name')}`, `Email: ${value('email')}`, `Role: ${value('interest')}`,
-      ...(value('phone') ? [`Phone: ${value('phone')}`] : []),
-      ...(value('city') ? [`City / district: ${value('city')}`] : []),
-      '', value('message') || 'Please let me know the requirements and next steps for my enquiry.',
-      '', 'Thank you.'
-    ].join('\r\n');
-    emailLink.href = `mailto:info@mmasrilanka.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    draftText.value = `To: info@mmasrilanka.com\nSubject: ${subject}\n\n${body}`;
-    draft.hidden = false;
-    status.textContent = 'Your draft is ready. Review it in your email app and press Send. This website has not sent your enquiry.';
-    emailLink.click();
-  });
-  form.querySelector('[data-copy-draft]').addEventListener('click', async () => {
+    if (submitButton.disabled) return;
+    submitButton.disabled = true;
+    status.textContent = 'Sending your registration request…';
     try {
-      await navigator.clipboard.writeText(draftText.value);
-      status.textContent = 'Draft copied. Paste it into your email service and send it to info@mmasrilanka.com.';
+      requestId ??= crypto.randomUUID();
+      const response = await fetch('/api/registration', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...Object.fromEntries(new FormData(registrationForm)), requestId })
+      });
+      const result = await response.json();
+      status.textContent = result.message;
+      if (response.ok) {
+        registrationForm.reset();
+        if (requestedProgramme === 'camp' || requestedProgramme === 'certification') programme.value = requestedProgramme;
+        requestId = undefined;
+      }
     } catch {
-      draftText.focus();
-      draftText.select();
-      status.textContent = 'Select and copy the draft below, then paste it into your email service and send it to info@mmasrilanka.com.';
+      status.textContent = 'Your request could not be sent. Please try again or email info@mmasrilanka.com.';
+    } finally {
+      submitButton.disabled = false;
     }
   });
   document.querySelectorAll('[data-interest]').forEach(link => {
     link.addEventListener('click', () => {
-      clearDraft();
-      form.elements.namedItem('interest').value = link.dataset.interest;
-      nameField.focus({ preventScroll: true });
+      registrationForm.elements.namedItem('interest').value = link.dataset.interest;
+      programme.value = 'membership';
+      registrationForm.elements.namedItem('name').focus({ preventScroll: true });
     });
   });
-  form.hidden = false;
+  registrationForm.hidden = false;
+  if (window.location.hash === '#registration') registrationForm.scrollIntoView();
 }

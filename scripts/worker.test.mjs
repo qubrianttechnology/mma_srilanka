@@ -1,5 +1,6 @@
 ﻿import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import { DatabaseSync } from 'node:sqlite';
 const source=await readFile(new URL('../src/index.js',import.meta.url),'utf8');
 const {default:worker}=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
 const env={ASSETS:{fetch:async()=>new Response('ok',{status:200,headers:{'Content-Type':'text/html'}})}};
@@ -21,3 +22,46 @@ const missing=await worker.fetch(new Request('https://example.test/missing.png')
 assert.equal(missing.status,404);assert.equal(missing.headers.get('X-Robots-Tag'),'noindex');assert.equal(missing.headers.get('Cache-Control'),null);
 const post=await worker.fetch(new Request('https://example.test/contact.html',{method:'POST'}),env);assert.equal(post.status,200);
 console.log('Canonical redirects, query preservation, no redirect loops, method handling and 404 indexing rules passed.');
+
+const database = new DatabaseSync(':memory:');
+database.exec(await readFile(new URL('../migrations/0001_registrations.sql', import.meta.url), 'utf8'));
+const registrationEnv = {
+  REGISTRATION_LIMIT: { limit: async () => ({ success: true }) },
+  REGISTRATIONS: {
+    prepare(sql) {
+      const statement = database.prepare(sql);
+      return { bind: (...values) => ({ run: async () => statement.run(...values) }) };
+    }
+  }
+};
+const applicant = {
+  requestId: '46d5fbe6-6a78-4c08-a821-ae098f047407',
+  name: 'Test Athlete',
+  email: 'athlete@example.test',
+  interest: 'Athlete',
+  programme: 'camp'
+};
+const submit = (fields = applicant, bindings = registrationEnv, origin = 'https://example.test') =>
+  worker.fetch(new Request('https://example.test/api/registration', {
+    method: 'POST',
+    headers: { Origin: origin, 'Content-Type': 'application/json' },
+    body: JSON.stringify(fields)
+  }), bindings);
+
+assert.equal((await submit(applicant, registrationEnv, 'https://other.test')).status, 403);
+assert.equal((await submit({ ...applicant, programme: 'unknown' })).status, 400);
+assert.equal((await submit({ ...applicant, message: 'x'.repeat(8192) })).status, 413);
+assert.equal((await submit(applicant, {
+  ...registrationEnv, REGISTRATION_LIMIT: { limit: async () => ({ success: false }) }
+})).status, 429);
+assert.equal((await submit(applicant, {
+  ...registrationEnv, REGISTRATIONS: { prepare() { throw new Error('Database offline'); } }
+})).status, 503);
+assert.equal((await submit()).status, 200);
+assert.equal((await submit()).status, 200);
+const saved = database.prepare('SELECT email, programme FROM registrations').all();
+assert.equal(saved.length, 1);
+assert.equal(saved[0].email, applicant.email);
+assert.equal(saved[0].programme, 'National MMA Development Camp');
+database.close();
+console.log('Registration validation, rate limit, database failure and duplicate retry checks passed.');

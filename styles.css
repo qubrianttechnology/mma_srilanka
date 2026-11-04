@@ -410,12 +410,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, .sidebar::-webkit-scrollbar { 
 .join-form textarea { display: block; width: 100%; max-width: 100%; border: 1px solid #b895815c; border-radius: 0; background: #ffffff06; color: white; padding: 13px 12px; font: inherit; resize: vertical; }
 .join-form textarea::placeholder { color: #c4a9a4; }
 .join-form .form-note { font-size: 12px; line-height: 1.7; }
-.email-draft { border-top: 1px solid #b895815c; margin-top: 24px; padding-top: 20px; }
-.email-draft p { font-size: 13px; overflow-wrap: anywhere; }
-.email-draft p a { text-decoration: underline; }
-.email-draft textarea { font-size: 13px; line-height: 1.6; background: #0002; }
-.draft-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; }
-.draft-actions .button { margin: 0; min-width: 0; }
 textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
 @media (max-width: 900px) {
   .support-heading, .support-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }
@@ -450,3 +444,6 @@ textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--gold); 
   .hero--emblem h1 { font-size: clamp(45px, 10.7vw, 62px); }
   .hero-emblem img { max-width: 260px; }
 }
+
+#registration { scroll-margin-top: 100px; }
+#registration h2, #leadership-title { font: 700 30px/1.1 var(--display); letter-spacing: 0; margin: 0 0 16px; }

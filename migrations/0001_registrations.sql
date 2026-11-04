@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS registrations (
+  id TEXT PRIMARY KEY NOT NULL,
+  submitted_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  role TEXT NOT NULL,
+  programme TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  city TEXT NOT NULL,
+  message TEXT NOT NULL
+);

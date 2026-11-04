@@ -8,5 +8,15 @@
     "binding": "ASSETS",
     "run_worker_first": true
   },
+  "d1_databases": [
+    {
+      "binding": "REGISTRATIONS",
+      "database_name": "slmmaf-registrations",
+      "database_id": "11386dfc-0310-44f0-a9b3-a44af3e1a223"
+    }
+  ],
+  "ratelimits": [
+    { "name": "REGISTRATION_LIMIT", "namespace_id": "6191191", "simple": { "limit": 5, "period": 60 } }
+  ],
   "send_metrics": false
 }

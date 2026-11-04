@@ -104,20 +104,17 @@
     <section class="join" id="contact" aria-labelledby="join-title">
       <div class="container join-inner">
         <div><div class="section-kicker light"><span>06</span> Join the movement</div><h1 class="page-title" id="join-title">Contact<br><em>MMA Sri Lanka.</em></h1><address class="contact-details"><a href="tel:+94726191191"><span>Call us</span>0726 191 191</a><a href="mailto:info@mmasrilanka.com"><span>Email us</span>info@mmasrilanka.com</a></address></div>
-        <form class="join-form" data-form aria-describedby="enquiry-help" hidden>
-          <p id="enquiry-help">Tell us how you would like to get involved. This form prepares an email to info@mmasrilanka.com. Review it in your email app and press Send to contact us.</p>
+        <form class="join-form" id="registration" method="post" action="/api/registration" data-form aria-describedby="registration-help" hidden>
+          <h2 class="card-title">Online registration</h2>
+          <p id="registration-help">Apply for membership, club affiliation or an event. SLMMAF will review your request and contact you about the next steps.</p>
           <div class="field-row"><label><span>Your name</span><input name="name" autocomplete="name" required maxlength="100" placeholder="Full name"></label><label><span>Email address</span><input type="email" name="email" autocomplete="email" required maxlength="254" placeholder="you@example.com"></label></div>
           <div class="field-row"><label><span>Phone (optional)</span><input type="tel" name="phone" autocomplete="tel" maxlength="30" placeholder="Your contact number"></label><label><span>City / district (optional)</span><input name="city" autocomplete="address-level2" maxlength="80" placeholder="Where you train or live"></label></div>
           <label><span>I'm interested as a</span><select name="interest" required><option value="">Select an option</option><option>Athlete</option><option>Coach</option><option>Official</option><option>Club representative</option><option>Partner</option></select></label>
+          <label><span>Apply for</span><select name="programme" required><option value="membership">Membership, club affiliation or partnership</option><option value="camp">National MMA Development Camp</option><option value="certification">Coach &amp; Official Certification</option></select></label>
           <label><span>Message (optional)</span><textarea name="message" rows="4" maxlength="800" placeholder="Tell us about your experience, club or enquiry."></textarea></label>
-          <p class="form-note">Include only the details needed for your enquiry. You can edit the email before sending. A membership enquiry does not confirm registration.</p>
-          <button class="button button-primary" type="submit">Open email draft <span aria-hidden="true">↗</span></button>
+          <p class="form-note">SLMMAF uses these details to review your request and contact you. Share only the information needed for your application.</p>
+          <button class="button button-primary" type="submit">Submit registration request <span aria-hidden="true">↗</span></button>
           <p class="form-status" role="status" aria-live="polite" data-form-status></p>
-          <div class="email-draft" data-email-draft hidden>
-            <p>Email app did not open? Copy this draft into your email service and send it to <a href="mailto:info@mmasrilanka.com">info@mmasrilanka.com</a>.</p>
-            <label><span>Your email draft</span><textarea rows="9" readonly data-draft-text></textarea></label>
-            <div class="draft-actions"><a class="arrow-link light-link" href="mailto:info@mmasrilanka.com" data-email-link>Open draft again <span aria-hidden="true">↗</span></a><button class="button" type="button" data-copy-draft>Copy email draft</button></div>
-          </div>
         </form>
         <noscript><p>Email <a href="mailto:info@mmasrilanka.com">info@mmasrilanka.com</a> with your name, contact details and whether you are enquiring as an athlete, coach, official, club representative or partner.</p></noscript>
       </div>
@@ -133,8 +130,8 @@
         </div>
         <ol class="joining-steps">
           <li><strong>Introduce yourself</strong><p>Choose your role and tell us what you would like to do.</p></li>
-          <li><strong>Send your enquiry</strong><p>Review the prepared email and send it from your email app.</p></li>
-          <li><strong>Confirm the next steps</strong><p>Ask the federation to confirm eligibility, documents, fees and available opportunities before applying.</p></li>
+          <li><strong>Send your enquiry</strong><p>Submit the online form and look for the confirmation on this page.</p></li>
+          <li><strong>Confirm the next steps</strong><p>The federation will follow up about eligibility, documents, fees and available opportunities.</p></li>
         </ol>
       </div>
     </section>
@@ -146,8 +143,8 @@
           <details><summary>How do I find a club near me?</summary><p>Browse the <a href="clubs.html">affiliated club directory</a> and contact a club to confirm its exact venue, training timetable and beginner availability. If your area is not listed, send the federation your city or district.</p></details>
           <details><summary>What are the membership fees and requirements?</summary><p>Fees and eligibility details are not published here yet. Contact the federation for the current requirements, any fees and the application process for your role.</p></details>
           <details><summary>Can children and young people take part?</summary><p>A parent or guardian should contact the federation or club to ask about age requirements, supervision and available junior sessions before arranging participation.</p></details>
-          <details><summary>Does this form register me as a member?</summary><p>No. It prepares an enquiry email. You need to press Send in your email app, then confirm the application process with the federation. Membership and event entries require separate confirmation.</p></details>
-          <details><summary>How do I join a camp or certification programme?</summary><p>Check the <a href="events.html">events page</a> for announcements. If registration details have not been published, email the federation with the programme you are interested in.</p></details>
+          <details><summary>Does this form register me as a member?</summary><p>The form sends a registration request to SLMMAF. The federation will contact you to confirm your membership or event entry.</p></details>
+          <details><summary>How do I join a camp or certification programme?</summary><p>Choose a programme from the <a href="events.html">events page</a> and submit a registration request.</p></details>
         </div>
       </div>
     </section>

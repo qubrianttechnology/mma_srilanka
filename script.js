@@ -76,9 +76,8 @@ if (registrationForm) {
   const programme = registrationForm.elements.namedItem('programme');
   const requestedProgramme = new URLSearchParams(window.location.search).get('programme');
   let requestId;
-  if ([...programme.options].some(option => option.value === requestedProgramme)) {
-    programme.value = requestedProgramme;
-  }
+  const linkedProgramme = [...programme.options].find(option => option.value === requestedProgramme);
+  if (linkedProgramme) programme.value = linkedProgramme.value;
 
   registrationForm.addEventListener('submit', async event => {
     event.preventDefault();
@@ -96,7 +95,7 @@ if (registrationForm) {
       status.textContent = result.message;
       if (response.ok) {
         registrationForm.reset();
-        if (requestedProgramme === 'camp' || requestedProgramme === 'certification') programme.value = requestedProgramme;
+        if (linkedProgramme) programme.value = linkedProgramme.value;
         requestId = undefined;
       }
     } catch {

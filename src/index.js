@@ -9,9 +9,10 @@ const securityHeaders = {
 const programmes = new Map([
   ['membership', 'Membership, club affiliation or partnership'],
   ['camp', 'National MMA Development Camp'],
-  ['certification', 'Coach & Official Certification']
+  ['certification', 'Coach & Official Certification'],
+  ['officiating', 'Judge or Referee Recruitment']
 ]);
-const roles = new Set(['Athlete', 'Coach', 'Official', 'Club representative', 'Partner']);
+const roles = new Set(['Athlete', 'Coach', 'Official', 'Judge', 'Referee', 'Club representative', 'Partner']);
 
 function registrationResponse(status, message) {
   return Response.json({ message }, {
@@ -66,6 +67,9 @@ async function register(request, env, url) {
       !/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(requestId) ||
       phone.length > 30 || city.length > 80 || message.length > 800) {
     return registrationResponse(400, 'Check your name, email address, role and programme, then try again.');
+  }
+  if (field('programme') === 'officiating' && role !== 'Judge' && role !== 'Referee') {
+    return registrationResponse(400, 'Choose Judge or Referee for the officiating application.');
   }
 
   try {

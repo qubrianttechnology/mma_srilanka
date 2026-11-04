@@ -106,11 +106,11 @@
         <div><div class="section-kicker light"><span>06</span> Join the movement</div><h1 class="page-title" id="join-title">Contact<br><em>MMA Sri Lanka.</em></h1><address class="contact-details"><a href="tel:+94726191191"><span>Call us</span>0726 191 191</a><a href="mailto:info@mmasrilanka.com"><span>Email us</span>info@mmasrilanka.com</a></address></div>
         <form class="join-form" id="registration" method="post" action="/api/registration" data-form aria-describedby="registration-help" hidden>
           <h2 class="card-title">Online registration</h2>
-          <p id="registration-help">Apply for membership, club affiliation or an event. SLMMAF will review your request and contact you about the next steps.</p>
+          <p id="registration-help">Apply for membership, club affiliation, an event or to join SLMMAF as a judge or referee. SLMMAF will review your request and contact you about the next steps.</p>
           <div class="field-row"><label><span>Your name</span><input name="name" autocomplete="name" required maxlength="100" placeholder="Full name"></label><label><span>Email address</span><input type="email" name="email" autocomplete="email" required maxlength="254" placeholder="you@example.com"></label></div>
           <div class="field-row"><label><span>Phone (optional)</span><input type="tel" name="phone" autocomplete="tel" maxlength="30" placeholder="Your contact number"></label><label><span>City / district (optional)</span><input name="city" autocomplete="address-level2" maxlength="80" placeholder="Where you train or live"></label></div>
-          <label><span>I'm interested as a</span><select name="interest" required><option value="">Select an option</option><option>Athlete</option><option>Coach</option><option>Official</option><option>Club representative</option><option>Partner</option></select></label>
-          <label><span>Apply for</span><select name="programme" required><option value="membership">Membership, club affiliation or partnership</option><option value="camp">National MMA Development Camp</option><option value="certification">Coach &amp; Official Certification</option></select></label>
+          <label><span>I'm interested as a</span><select name="interest" required><option value="">Select an option</option><option>Athlete</option><option>Coach</option><option>Official</option><option>Judge</option><option>Referee</option><option>Club representative</option><option>Partner</option></select></label>
+          <label><span>Apply for</span><select name="programme" required><option value="membership">Membership, club affiliation or partnership</option><option value="camp">National MMA Development Camp</option><option value="certification">Coach &amp; Official Certification</option><option value="officiating">Judge or Referee Recruitment</option></select></label>
           <label><span>Message (optional)</span><textarea name="message" rows="4" maxlength="800" placeholder="Tell us about your experience, club or enquiry."></textarea></label>
           <p class="form-note">SLMMAF uses these details to review your request and contact you. Share only the information needed for your application.</p>
           <button class="button button-primary" type="submit">Submit registration request <span aria-hidden="true">↗</span></button>
@@ -158,6 +158,6 @@
     </div>
     <div class="container footer-bottom"><span>© <span data-year></span> Sri Lanka MMA Federation</span></div>
   </footer>
-  <script src="script.js" defer></script>
+  <script src="script.js?v=officiating" defer></script>
 </body>
 </html>

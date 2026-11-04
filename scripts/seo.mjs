@@ -38,12 +38,11 @@ export function enhanceSeo(html, { file, siteUrl, verification = '' }) {
     html=html.replace('<main id="main">',`<main id="main"><nav class="seo-breadcrumb container" aria-label="Breadcrumb"><a href="/">MMA Sri Lanka</a><span aria-hidden="true">/</span><a href="/clubs/">Affiliated clubs</a><span aria-hidden="true">/</span><span aria-current="page">${escapeHtml(country)}</span></nav>`);
   } else if (breadcrumb) graph[0].breadcrumb = { '@id': breadcrumb['@id'] };
   html=html.replace('</head>',`  <script type="application/ld+json">${serialize({'@context':'https://schema.org','@graph':graph})}</script>\n</head>`);
-  const emblemPreview = html.includes('property="og:image" content="' + siteUrl + '/assets/slmmaf-logo.png"');
   const additions = [
     '<meta property="og:image:type" content="image/png">',
-    `<meta property="og:image:width" content="${emblemPreview ? 1024 : 1983}">`,
-    `<meta property="og:image:height" content="${emblemPreview ? 1024 : 793}">`,
-    `<meta name="twitter:image:alt" content="${emblemPreview ? 'Sri Lanka Mixed Martial Arts Federation emblem' : 'Mixed martial artists training together in a cage'}">`
+    '<meta property="og:image:width" content="1024">',
+    '<meta property="og:image:height" content="1024">',
+    '<meta name="twitter:image:alt" content="Sri Lanka Mixed Martial Arts Federation emblem">'
   ];
   if (verification) additions.push(`<meta name="google-site-verification" content="${escapeHtml(verification)}">`);
   html=html.replace('</head>',additions.join('\n  ')+'\n</head>');

@@ -20,7 +20,7 @@ const profile=hostile.pages.get('clubs/test-club/index.html');
 assert(!profile.includes('<script>alert(1)</script>'));
 assert(!profile.includes('<img src=x'));
 for(const match of profile.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g))JSON.parse(match[1]);
-assert(profile.includes('href="/styles.css"'));
+assert.match(profile, /href="\/styles\.css(?:\?[^"]*)?"/);
 assert(profile.includes('https://example.test/clubs/test-club/'));
 assert(!profile.includes('<strong>Affiliation number:</strong>'));
 assert.equal(render([]).pages.size,1);

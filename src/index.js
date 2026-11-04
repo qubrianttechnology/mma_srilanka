@@ -100,7 +100,9 @@ export default {
         url.hostname = 'mmasrilanka.com';
         url.port = '';
       }
-      if (/^\/(?:home|index)(?:\.html|\/)?$/.test(originalPath)) url.pathname = '/';
+      if (originalPath === '/assets/slmmaf-logo.png' || originalPath === '/assets/federation-emblem.png') {
+        url.pathname = '/assets/slmmaf-official-logo.png';
+      } else if (/^\/(?:home|index)(?:\.html|\/)?$/.test(originalPath)) url.pathname = '/';
       else if (originalPath.endsWith('/index.html')) url.pathname = originalPath.slice(0, -10);
       else {
         const name = originalPath.slice(1).replace(/\.html$|\/$/g, '');

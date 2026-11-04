@@ -74,10 +74,15 @@ if (registrationForm) {
   const status = registrationForm.querySelector('[data-form-status]');
   const submitButton = registrationForm.querySelector('button[type="submit"]');
   const programme = registrationForm.elements.namedItem('programme');
-  const requestedProgramme = new URLSearchParams(window.location.search).get('programme');
+  const params = new URLSearchParams(window.location.search);
+  const requestedProgramme = params.get('programme');
   let requestId;
   const linkedProgramme = [...programme.options].find(option => option.value === requestedProgramme);
   if (linkedProgramme) programme.value = linkedProgramme.value;
+  if (params.get('affiliation') === 'club') {
+    programme.value = 'membership';
+    registrationForm.elements.namedItem('interest').value = 'Club representative';
+  }
 
   registrationForm.addEventListener('submit', async event => {
     event.preventDefault();

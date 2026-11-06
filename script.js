@@ -6,6 +6,46 @@ const closeButton = document.querySelector('[data-menu-close]');
 const backdrop = document.querySelector('[data-menu-backdrop]');
 const mobileNav = window.matchMedia('(max-width: 1100px)');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// A short, optional welcome on the first home-page visit in each tab.
+const siteIntro = document.querySelector('[data-site-intro]');
+if (siteIntro) {
+  let hasSeenIntro = false;
+  try { hasSeenIntro = sessionStorage.getItem('slmmaf-intro-seen') === '1'; } catch { /* Storage may be unavailable. */ }
+  if (!reduceMotion && !hasSeenIntro && !window.location.hash && typeof siteIntro.showModal === 'function') {
+    let closing = false;
+    let exitTimer;
+    let dismissTimer;
+    const cleanUpIntro = () => {
+      window.clearTimeout(exitTimer);
+      window.clearTimeout(dismissTimer);
+      document.body.classList.remove('intro-active');
+      siteIntro.hidden = true;
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
+    const dismissIntro = (immediately = false) => {
+      if (closing || !siteIntro.open) return;
+      closing = true;
+      window.clearTimeout(dismissTimer);
+      siteIntro.classList.add('is-leaving');
+      const finish = () => { siteIntro.close(); cleanUpIntro(); };
+      if (immediately) finish();
+      else exitTimer = window.setTimeout(finish, 450);
+    };
+    const onVisibilityChange = () => {
+      if (document.hidden) dismissIntro(true);
+    };
+    siteIntro.addEventListener('cancel', event => { event.preventDefault(); dismissIntro(true); });
+    siteIntro.addEventListener('close', cleanUpIntro);
+    siteIntro.hidden = false;
+    siteIntro.showModal();
+    document.body.classList.add('intro-active');
+    try { sessionStorage.setItem('slmmaf-intro-seen', '1'); } catch { /* The intro still works without storage. */ }
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    dismissTimer = window.setTimeout(() => dismissIntro(), 2800);
+  }
+}
+
 let menuOpen = false;
 const background = [header, document.querySelector('main'), document.querySelector('footer')].filter(Boolean);
 const previousInert = new Map();

@@ -28,7 +28,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;0,900;1,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=official-logo">
+  <link rel="stylesheet" href="styles.css?v=brand-intro">
 
   <script type="application/ld+json">
 {
@@ -64,6 +64,22 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
+
+  <dialog class="site-intro" data-site-intro hidden aria-labelledby="intro-title" aria-describedby="intro-federation">
+    <div class="site-intro__ambience" aria-hidden="true"></div>
+    <div class="site-intro__top" aria-hidden="true"><span>SLMMAF</span><span>Sri Lanka &middot; Mixed Martial Arts</span></div>
+    <div class="site-intro__content">
+      <p class="site-intro__eyebrow">Discipline. Honour. Unity.</p>
+      <div class="site-intro__seal" aria-hidden="true">
+        <svg class="site-intro__octagon" viewBox="0 0 240 240" fill="none"><path d="M78 18H162L222 78V162L162 222H78L18 162V78Z"/><path d="M82 29H158L211 82V158L158 211H82L29 158V82Z"/></svg>
+        <img src="assets/slmmaf-official-logo.png" alt="" width="1024" height="1024" decoding="async">
+      </div>
+      <p class="site-intro__title" id="intro-title">One island.<br><em>One fighting spirit.</em></p>
+      <p class="site-intro__federation" id="intro-federation">Sri Lanka Mixed Martial Arts Federation</p>
+      <div class="site-intro__line" aria-hidden="true"><span></span></div>
+    </div>
+    <div class="site-intro__bottom"><span>The next chapter starts here</span></div>
+  </dialog>
 
   <header class="site-header" data-header>
     <div class="container nav-wrap"><a class="brand" href="index.html" aria-label="MMA Sri Lanka, SLMMAF home">
@@ -174,6 +190,6 @@
     </div>
     <div class="container footer-bottom"><span>© <span data-year></span> Sri Lanka MMA Federation</span></div>
   </footer>
-  <script src="script.js" defer></script>
+  <script src="script.js?v=brand-intro" defer></script>
 </body>
 </html>

@@ -7,12 +7,30 @@ const backdrop = document.querySelector('[data-menu-backdrop]');
 const mobileNav = window.matchMedia('(max-width: 1100px)');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// A short, optional welcome on the first home-page visit in each tab.
-const siteIntro = document.querySelector('[data-site-intro]');
-if (siteIntro) {
-  let hasSeenIntro = false;
-  try { hasSeenIntro = sessionStorage.getItem('slmmaf-intro-seen') === '1'; } catch { /* Storage may be unavailable. */ }
-  if (!reduceMotion && !hasSeenIntro && !window.location.hash && typeof siteIntro.showModal === 'function') {
+// Share the same intro across every page, including on refresh and deep links.
+if (!reduceMotion && typeof HTMLDialogElement !== 'undefined' && typeof HTMLDialogElement.prototype.showModal === 'function') {
+    const siteIntro = document.createElement('dialog');
+    siteIntro.className = 'site-intro';
+    siteIntro.setAttribute('data-site-intro', '');
+    siteIntro.setAttribute('aria-labelledby', 'intro-title');
+    siteIntro.setAttribute('aria-describedby', 'intro-federation');
+    siteIntro.innerHTML = `
+      <div class="site-intro__ambience" aria-hidden="true"></div>
+      <div class="site-intro__top" aria-hidden="true"><span>SLMMAF</span><span>Sri Lanka &middot; Mixed Martial Arts</span></div>
+      <div class="site-intro__content">
+        <p class="site-intro__eyebrow">Discipline. Honour. Unity.</p>
+        <div class="site-intro__seal" aria-hidden="true">
+          <svg class="site-intro__octagon" viewBox="0 0 240 240" fill="none"><path d="M78 18H162L222 78V162L162 222H78L18 162V78Z"/><path d="M82 29H158L211 82V158L158 211H82L29 158V82Z"/></svg>
+          <img alt="" width="1024" height="1024" decoding="async">
+        </div>
+        <p class="site-intro__title" id="intro-title">One island.<br><em>One fighting spirit.</em></p>
+        <p class="site-intro__federation" id="intro-federation">Sri Lanka Mixed Martial Arts Federation</p>
+        <div class="site-intro__line" aria-hidden="true"><span></span></div>
+      </div>
+      <div class="site-intro__bottom"><span>The next chapter starts here</span></div>`;
+    // Reuse the resolved header asset URL so nested club pages use the right path.
+    siteIntro.querySelector('img').src = header.querySelector('.brand-logo').src;
+    document.body.prepend(siteIntro);
     let closing = false;
     let exitTimer;
     let dismissTimer;
@@ -37,13 +55,10 @@ if (siteIntro) {
     };
     siteIntro.addEventListener('cancel', event => { event.preventDefault(); dismissIntro(true); });
     siteIntro.addEventListener('close', cleanUpIntro);
-    siteIntro.hidden = false;
     siteIntro.showModal();
     document.body.classList.add('intro-active');
-    try { sessionStorage.setItem('slmmaf-intro-seen', '1'); } catch { /* The intro still works without storage. */ }
     document.addEventListener('visibilitychange', onVisibilityChange);
     dismissTimer = window.setTimeout(() => dismissIntro(), 2800);
-  }
 }
 
 let menuOpen = false;

@@ -64,7 +64,7 @@ npm run deploy
 
 ## Motion and interaction
 
-- Shared logo intro on every page load and refresh, including club pages and deep links, with an animated octagon, automatic exit and Escape support; respects reduced-motion preferences
+- Shared logo intro on every page load and refresh, including club pages and deep links, with an animated octagon, automatic exit and Escape support; home keeps the full 3.25-second intro while other pages use a quick 1.1-second version; respects reduced-motion preferences
 - Sequenced hero entrance and image focus animation
 - Always-visible section content with compact responsive spacing
 - RequestAnimationFrame-throttled hero depth effect

@@ -9,8 +9,13 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 
 // Share the same intro across every page, including on refresh and deep links.
 if (!reduceMotion && typeof HTMLDialogElement !== 'undefined' && typeof HTMLDialogElement.prototype.showModal === 'function') {
+    const quickIntro = document.body.classList.contains('inner-page');
+    const introDuration = quickIntro ? 900 : 2800;
+    const exitDuration = quickIntro ? 200 : 450;
     const siteIntro = document.createElement('dialog');
-    siteIntro.className = 'site-intro';
+    siteIntro.className = quickIntro ? 'site-intro site-intro--quick' : 'site-intro';
+    siteIntro.style.setProperty('--intro-duration', `${introDuration}ms`);
+    siteIntro.style.setProperty('--intro-exit-duration', `${exitDuration}ms`);
     siteIntro.setAttribute('data-site-intro', '');
     siteIntro.setAttribute('aria-labelledby', 'intro-title');
     siteIntro.setAttribute('aria-describedby', 'intro-federation');
@@ -48,7 +53,7 @@ if (!reduceMotion && typeof HTMLDialogElement !== 'undefined' && typeof HTMLDial
       siteIntro.classList.add('is-leaving');
       const finish = () => { siteIntro.close(); cleanUpIntro(); };
       if (immediately) finish();
-      else exitTimer = window.setTimeout(finish, 450);
+      else exitTimer = window.setTimeout(finish, exitDuration);
     };
     const onVisibilityChange = () => {
       if (document.hidden) dismissIntro(true);
@@ -58,7 +63,7 @@ if (!reduceMotion && typeof HTMLDialogElement !== 'undefined' && typeof HTMLDial
     siteIntro.showModal();
     document.body.classList.add('intro-active');
     document.addEventListener('visibilitychange', onVisibilityChange);
-    dismissTimer = window.setTimeout(() => dismissIntro(), 2800);
+    dismissTimer = window.setTimeout(() => dismissIntro(), introDuration);
 }
 
 let menuOpen = false;

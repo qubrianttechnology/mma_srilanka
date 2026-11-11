@@ -1,5 +1,6 @@
 import { enhanceSeo } from './seo.mjs';
 import { renderClubs, validateClubs } from './clubs.mjs';
+import { writeAffiliationAssets } from './affiliations.mjs';
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -45,6 +46,9 @@ const files = [
 
 const clubData = JSON.parse((await readFile(join(root, 'data/clubs.json'), 'utf8')).replace(/^\uFEFF/, ''));
 validateClubs(clubData);
+for (const club of clubData.clubs) {
+  if (club.status === 'approved' && !club.affiliationNumber) throw new Error(`Missing affiliation number for ${club.slug}. Run npm run clubs:assign-affiliations and commit data/clubs.json before building.`);
+}
 
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
@@ -65,6 +69,7 @@ for (const file of files) {
 await cp(join(root, 'assets'), join(output, 'assets'), { recursive: true });
 const clubTemplate = await readFile(join(output, 'clubs.html'), 'utf8');
 const clubSite = renderClubs({ data: clubData, template: clubTemplate, siteUrl });
+await writeAffiliationAssets({ clubs: clubSite.clubs, siteUrl, output });
 for (const [file, html] of clubSite.pages) {
   const destination = join(output, file);
   await mkdir(dirname(destination), { recursive: true });

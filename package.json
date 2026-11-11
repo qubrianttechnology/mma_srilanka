@@ -5,12 +5,16 @@
   "description": "Official website for the Sri Lanka Mixed Martial Arts Federation",
   "scripts": {
     "build": "node scripts/build.mjs",
+    "clubs:assign-affiliations": "node scripts/assign-affiliations.mjs",
     "dev": "npm run build && wrangler dev",
     "deploy": "npm run build && wrangler deploy",
     "check:seo": "npm run build && node scripts/seo-check.mjs",
-    "test": "node scripts/clubs.test.mjs && node scripts/worker.test.mjs"
+    "test": "node scripts/clubs.test.mjs && node scripts/affiliations.test.mjs && node scripts/worker.test.mjs"
   },
   "devDependencies": {
+    "jsqr": "^1.4.0",
+    "pngjs": "^7.0.0",
+    "qrcode": "^1.5.4",
     "wrangler": "^4.130.0"
   }
 }

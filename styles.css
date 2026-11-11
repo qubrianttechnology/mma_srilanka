@@ -291,6 +291,10 @@ h2{line-height:.94;letter-spacing:-1px}
 .club-contact { padding: 28px; background: #eee8dc; border-top: 3px solid var(--gold); }
 .club-contact address { font-style: normal; margin: 20px 0; }
 .club-contact a { display: block; width: fit-content; margin-top: 16px; color: var(--red); overflow-wrap: anywhere; text-decoration: underline; text-underline-offset: 4px; }
+.club-verification { border-top: 1px solid #d2c3a8; margin-top: 28px; padding-top: 24px; }
+.club-verification h3 { margin: 0; font-size: 22px; }
+.club-affiliation-number { font-weight: 700; overflow-wrap: anywhere; }
+.club-verification img { display: block; width: min(100%, 240px); height: auto; background: #fff; }
 .club-disciplines { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; padding: 0; }
 .club-disciplines li { background: #eee8dc; padding: 8px 12px; font-size: 13px; }
 .club-back { margin-top: 32px; }

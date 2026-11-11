@@ -1,6 +1,6 @@
 ﻿# Managing affiliated clubs
 
-Edit `data/clubs.json`, then run `npm run build`. Preview the generated website with `npm run dev`; club profiles and country pages are generated in `dist/`. Do not edit generated files in `dist/`.
+Edit `data/clubs.json`. For newly approved clubs, run `npm run clubs:assign-affiliations` and commit the updated club data, then run `npm run build`. Preview the generated website with `npm run dev`; club profiles and country pages are generated in `dist/`. Do not edit generated files in `dist/`.
 
 MMA Colombo Combat Club is always listed first when published. Other clubs follow their order in the `clubs` array; append new club records to the end. The main directory, country directories and structured list positions all use this same order. Directory cards are stacked vertically, with one club per row at all screen sizes.
 
@@ -13,8 +13,9 @@ Each club requires:
 - `city`: public town or service area. The first supplied club uses `Colombo / Gampaha` until an exact location is supplied.
 - `description`: factual public club description.
 - `status`: `draft`, `approved` or `suspended`. Only approved clubs are published.
+- `affiliationNumber`: required before publishing an approved club; assign it with `npm run clubs:assign-affiliations` and save the result. Draft clubs can omit it.
 
-Optional fields: `region` (province/state), `district`, `streetAddress`, `postalCode`, `phone`, `whatsapp`, `email`, `website` (HTTPS), `headInstructor`, `affiliationNumber`, `disciplines` (array of names), and `validUntil` (`YYYY-MM-DD`). Omit unknown fields; do not use placeholder numbers or fabricated addresses. Sri Lankan national telephone numbers are converted to +94 for click-to-call and WhatsApp links. International WhatsApp numbers must include a leading + and country code. A distinct WhatsApp number is shown separately from the telephone number and represented as a club contact point. The head instructor is shown publicly and represented as a named club member with the Head Instructor role.
+Optional fields: `region` (province/state), `district`, `streetAddress`, `postalCode`, `phone`, `whatsapp`, `email`, `website` (HTTPS), `headInstructor`, `disciplines` (array of names), and `validUntil` (`YYYY-MM-DD`). Omit unknown fields; do not use placeholder numbers or fabricated addresses. Sri Lankan national telephone numbers are converted to +94 for click-to-call and WhatsApp links. International WhatsApp numbers must include a leading + and country code. A distinct WhatsApp number is shown separately from the telephone number and represented as a club contact point. The head instructor is shown publicly and represented as a named club member with the Head Instructor role.
 
 Club data is public website content. Do not put NIC/passport numbers, private application records or other internal identifiers in this file. The International Japan Karate-Do Youshin Dojo listing uses the owner-supplied public club details; its supplied NIC number is excluded from both source data and generated pages.
 
@@ -38,6 +39,20 @@ An approved club generates:
 Countries are populated from approved club records. Search and country filters enhance server-rendered links; the directory and profiles are readable without JavaScript.
 
 Draft, suspended and expired clubs do not appear in the built output or sitemap. A rebuild and deployment are required when any record changes, including expiry dates. Expiry is evaluated on the UTC build date; schedule builds if expiry must be applied automatically on a particular day. An omitted expiry date does not assert a fixed validity period.
+
+## Affiliation numbers and certificate QR codes
+
+Approved clubs receive permanent IDs such as `SLMMAF-CLUB-0001`. Run `npm run clubs:assign-affiliations` to assign missing IDs. Existing IDs are preserved; draft and suspended clubs do not receive new IDs. Keep issued IDs when a club is suspended or expires. The top-level `affiliationSequence` records the highest issued sequence so the command does not reuse a number if a record is removed. Do not lower this value or reassign an issued number. The build refuses to publish approved clubs without a saved ID, preventing certificates from relying on a temporary build-generated number.
+
+Each published club's build generates files at `/assets/affiliations/{affiliationNumber}/`:
+
+- `qr.png`: a 1200 × 1200 black-on-white QR image for certificate artwork.
+- `qr.svg`: the same QR code as a scalable vector.
+- `certificate-label.svg`: QR code, affiliation number and club name together in one self-contained vector label.
+
+The club profile shows its ID, QR code and download links. The QR encodes the permanent public club profile URL, where visitors can check the club name and federation listing. Keep the QR's white border and square aspect ratio when placing it on a certificate, and scan the final printed layout before issuing it. The QR links to the club listing; it is not a digital signature for an individual certificate. Keep club slugs stable so already printed QR codes continue to work. Draft, suspended and expired clubs have no public profile or QR download in a rebuilt deployment, and the existing 404 response is marked noindex.
+
+`npm test` checks saved IDs, duplicate rejection, stable assignment after reordering and removal, and decodes generated PNGs with a separate QR reader. QR generation runs only during the build and sends no club details to an external QR service.
 
 ## Google discovery
 

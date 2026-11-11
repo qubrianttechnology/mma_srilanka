@@ -3,6 +3,7 @@ import { readFile, readdir, stat } from 'node:fs/promises';
 import { resolve, join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { enhanceSeo, pagePath } from './seo.mjs';
+import { affiliationAssetPaths } from './affiliations.mjs';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..','dist');
 const titles=new Set(), descriptions=new Set(), canonicals=new Set();
 const escapeHtml=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -94,6 +95,13 @@ for(const club of clubData.clubs) {
  const entity=[...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(match=>JSON.parse(match[1])).find(node=>node['@id']===`${origin}/${path}#organization`);
  assert.equal(entity.name,club.name);
  assert.equal(entity.description,club.description);
+ if(club.affiliationNumber) {
+  assert.equal(entity.identifier?.value,club.affiliationNumber,`Club affiliation identifier: ${club.slug}`);
+  const assets=affiliationAssetPaths(club);
+  for(const path of Object.values(assets))await stat(join(root,path));
+  assert(html.includes(`src="/${assets.svg}"`),`Visible affiliation QR: ${club.slug}`);
+  assert(html.includes(`href="/${assets.png}"`),`Certificate QR download: ${club.slug}`);
+ }
  if(club.website)assert(entity.sameAs.includes(club.website),`Official club website: ${club.slug}`);
  if(club.headInstructor)assert.equal(entity.member?.name,club.headInstructor,`Head instructor: ${club.slug}`);
  if(club.whatsapp) {

@@ -1,4 +1,6 @@
-﻿const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+import { affiliationAssetPaths, validateAffiliations } from './affiliations.mjs';
+
+const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const jsonScript = value => JSON.stringify(value).replace(/</g, '\\u003c');
 const countryPath = club => `clubs/countries/${club.countryCode.toLowerCase()}/`;
 const clubPath = club => `clubs/${club.slug}/`;
@@ -43,6 +45,7 @@ export function validateClubs(data) {
     if (club.alternateNames !== undefined && (!Array.isArray(club.alternateNames) || club.alternateNames.some(item => !text(item)))) throw new Error(`Alternate names must be a text array: ${club.slug}`);
     if (club.trainingLocations !== undefined && (!Array.isArray(club.trainingLocations) || club.trainingLocations.some(place => !place || !text(place.name) || !text(place.city) || (place.streetAddress !== undefined && !text(place.streetAddress))))) throw new Error(`Training locations need a name and city, with an optional streetAddress: ${club.slug}`);
   }
+  validateAffiliations(data);
   return data.clubs;
 }
 
@@ -83,6 +86,7 @@ function directoryContent(clubs, selectedCountry = '') {
 }
 function profileContent(club) {
   const e = escapeHtml;
+  const affiliationAssets = club.affiliationNumber ? affiliationAssetPaths(club) : null;
   const address = [club.streetAddress,club.city,club.district,club.region,club.postalCode,club.country].filter(Boolean).join(', ');
   return `<main id="main"><section class="section club-profile"><div class="container">
     <nav class="club-breadcrumb" aria-label="Breadcrumb"><a href="/clubs.html">Affiliated clubs</a><span aria-hidden="true">/</span><a href="/${countryPath(club)}">${e(club.country)}</a><span aria-hidden="true">/</span><span aria-current="page">${e(club.name)}</span></nav>
@@ -103,7 +107,8 @@ function profileContent(club) {
     ${club.email?`<a href="mailto:${e(club.email)}">${e(club.email)}</a>`:''}
     ${club.website?`<a href="${e(club.website)}" rel="external">${e(club.name)} official website &#8599;</a>`:''}
     ${club.streetAddress?`<a href="https://www.google.com/maps/search/?api=1&amp;query=${e(encodeURIComponent(address))}" rel="external">Find location on Google Maps &#8599;</a>`:''}
-    ${!club.phone&&!club.whatsapp&&!club.email&&!club.website?'<p>Contact the federation for club contact information.</p>':''}</aside></div>
+    ${!club.phone&&!club.whatsapp&&!club.email&&!club.website?'<p>Contact the federation for club contact information.</p>':''}
+    ${affiliationAssets ? `<section class="club-verification" aria-labelledby="club-verification-title"><h3 id="club-verification-title">Club affiliation</h3><p class="club-affiliation-number">${e(club.affiliationNumber)}</p><img src="/${affiliationAssets.svg}" alt="QR code linking to the ${e(club.name)} federation profile" width="240" height="240" loading="lazy"><p>Scan to view this club's federation profile.</p><a href="/${affiliationAssets.png}" download="${e(club.affiliationNumber)}-qr.png">Download QR code (PNG)</a><a href="/${affiliationAssets.svg}" download="${e(club.affiliationNumber)}-qr.svg">Download QR code (SVG)</a><a href="/${affiliationAssets.label}" download="${e(club.affiliationNumber)}-certificate-label.svg">Download certificate label (SVG)</a></section>` : ''}</aside></div>
     <a class="arrow-link club-back" href="/clubs.html">Browse all affiliated clubs <span aria-hidden="true">&#8599;</span></a>
     </div></section></main>`;
 }
@@ -147,5 +152,5 @@ export function renderClubs({ data, template, siteUrl, today = new Date().toISOS
     html=schema(html,{'@context':'https://schema.org','@type':'BreadcrumbList','@id':url+'#breadcrumb',itemListElement:[{'@type':'ListItem',position:1,name:'Affiliated clubs',item:siteUrl+'/clubs/'},{'@type':'ListItem',position:2,name:club.country,item:`${siteUrl}/${countryPath(club)}`},{'@type':'ListItem',position:3,name:club.name,item:url}]});
     pages.set(path+'index.html',html);paths.push(path);
   }
-  return { pages, paths, count: clubs.length };
+  return { pages, paths, count: clubs.length, clubs };
 }

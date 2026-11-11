@@ -266,7 +266,7 @@ h2{line-height:.94;letter-spacing:-1px}
 .country-links a { border: 1px solid #d2c3a8; color: #6b4512; padding: 7px 15px; font-size: 12px; }
 .country-links a:hover { background: var(--gold); color: var(--ink); }
 .club-result-count { margin: 22px 0; color: #605a50; font-size: 13px; }
-.club-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+.club-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
 .club-card { display: flex; flex-direction: column; align-items: flex-start; padding: 25px; background: #fffcf6; border: 1px solid #ded7c9; border-top: 3px solid var(--gold); min-width: 0; }
 .club-status { display: inline-block; background: #f0e5d0; color: #65451d; font-size: 10px; font-weight: 700; letter-spacing: .7px; padding: 6px 9px; text-transform: uppercase; }
 .club-card h2 { font-size: 32px; line-height: 1.1; letter-spacing: -.3px; margin: 20px 0 10px; overflow-wrap: anywhere; }
@@ -295,9 +295,8 @@ h2{line-height:.94;letter-spacing:-1px}
 .club-disciplines li { background: #eee8dc; padding: 8px 12px; font-size: 13px; }
 .club-back { margin-top: 32px; }
 @media (min-width: 901px) and (max-width: 1200px) { .nav { gap: 14px; font-size: 12px; } .nav-cta { gap: 12px; font-size: 10px; padding-inline: 12px; } }
-@media (max-width: 900px) { .club-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .club-profile-grid { gap: 28px; } .clubs-callout { align-items: flex-start; flex-direction: column; gap: 20px; } }
+@media (max-width: 900px) { .club-profile-grid { gap: 28px; } .clubs-callout { align-items: flex-start; flex-direction: column; gap: 20px; } }
 @media (max-width: 600px) { .club-filters, .club-grid, .club-profile-grid { grid-template-columns: minmax(0, 1fr); } .club-filters { padding: 18px; gap: 14px; } .club-contact, .club-card { padding: 22px; } .directory-intro { font-size: 15px; } .club-profile-grid { gap: 26px; } }
-.club-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
 .club-card > p { max-width: 80ch; }
 
 /* Original desktop header, with a side drawer only on smaller screens. */

@@ -109,7 +109,8 @@ function profileContent(club) {
 }
 
 export function renderClubs({ data, template, siteUrl, today = new Date().toISOString().slice(0,10) }) {
-  const clubs = validateClubs(data).filter(c=>c.status==='approved' && (!c.validUntil || c.validUntil>=today)).sort((a,b)=>a.name.localeCompare(b.name));
+  // Keep MMA Colombo first, then preserve the order in which other clubs were added.
+  const clubs = validateClubs(data).filter(c=>c.status==='approved' && (!c.validUntil || c.validUntil>=today)).sort((a,b)=>Number(b.slug==='mma-colombo-combat-club')-Number(a.slug==='mma-colombo-combat-club'));
   const base = rootLinks(template);
   const replaceDirectory = (html, list, selected='') => html.replace(/<!-- CLUB_DIRECTORY_START -->[\s\S]*?<!-- CLUB_DIRECTORY_END -->/,()=>`<!-- CLUB_DIRECTORY_START -->${directoryContent(list,selected)}<!-- CLUB_DIRECTORY_END -->`);
   const itemList = (list, path) => ({'@context':'https://schema.org','@type':'ItemList','@id':`${siteUrl}/${path}#clubs`,numberOfItems:list.length,itemListElement:list.map((c,i)=>({'@type':'ListItem',position:i+1,name:c.name,url:`${siteUrl}/${clubPath(c)}`}))});

@@ -2,6 +2,8 @@
 
 Edit `data/clubs.json`, then run `npm run build`. Preview the generated website with `npm run dev`; club profiles and country pages are generated in `dist/`. Do not edit generated files in `dist/`.
 
+MMA Colombo Combat Club is always listed first when published. Other clubs follow their order in the `clubs` array; append new club records to the end. The main directory, country directories and structured list positions all use this same order. Directory cards are stacked vertically, with one club per row at all screen sizes.
+
 Each club requires:
 
 - `slug`: permanent, unique lowercase URL identifier, using letters, numbers and hyphens.

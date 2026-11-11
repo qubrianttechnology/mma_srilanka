@@ -95,6 +95,12 @@ for(const club of clubData.clubs) {
  assert.equal(entity.name,club.name);
  assert.equal(entity.description,club.description);
  if(club.website)assert(entity.sameAs.includes(club.website),`Official club website: ${club.slug}`);
+ if(club.headInstructor)assert.equal(entity.member?.name,club.headInstructor,`Head instructor: ${club.slug}`);
+ if(club.whatsapp) {
+  assert.equal(entity.contactPoint?.contactType,'WhatsApp',`WhatsApp contact: ${club.slug}`);
+  assert.equal(new URL(entity.contactPoint.url).origin,'https://wa.me');
+  assert(html.includes(`href="${entity.contactPoint.url}"`),`Visible WhatsApp link: ${club.slug}`);
+ }
  if(club.alternateNames?.length)assert.deepEqual(entity.alternateName,club.alternateNames);
  if(club.trainingLocations?.length)assert.equal(entity.location.length,club.trainingLocations.length);
 }

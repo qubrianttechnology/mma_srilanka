@@ -14,7 +14,7 @@ assert.equal(render([{...fixture,validUntil:'2026-10-04'}]).count,1);
 const international=render([fixture,{...fixture,slug:'second-country-club',name:'Another Country Test Club',countryCode:'GB',country:'United Kingdom',city:'London'}]);
 assert(!international.pages.get('clubs/countries/lk/index.html').includes('Another Country Test Club'));
 assert(international.pages.get('clubs/countries/gb/index.html').includes('Another Country Test Club'));
-for(const change of [{slug:'../unsafe'},{slug:'countries'},{website:'javascript:alert(1)'},{validUntil:'2026-02-30'},{phone:'bad" onclick="x'},{countryCode:'LK/'},{alternateNames:'Alias'},{alternateNames:[null]},{trainingInformation:[]},{trainingLocations:[null]},{trainingLocations:[{name:'Venue'}]},{trainingLocations:[{name:'Venue',city:'City',streetAddress:12}]}]) assert.throws(()=>validateClubs({clubs:[{...fixture,...change}]}));
+for(const change of [{slug:'../unsafe'},{slug:'countries'},{website:'javascript:alert(1)'},{validUntil:'2026-02-30'},{phone:'bad" onclick="x'},{whatsapp:'javascript:alert(1)'},{whatsapp:'0771234567890123456789'},{whatsapp:771234567},{headInstructor:[]},{district:{}},{countryCode:'LK/'},{alternateNames:'Alias'},{alternateNames:[null]},{trainingInformation:[]},{trainingLocations:[null]},{trainingLocations:[{name:'Venue'}]},{trainingLocations:[{name:'Venue',city:'City',streetAddress:12}]}]) assert.throws(()=>validateClubs({clubs:[{...fixture,...change}]}));
 assert.throws(()=>validateClubs({clubs:[fixture,fixture]}));
 const hostile=render([{...fixture,name:'Club <script>alert(1)</script>',description:'<img src=x onerror=alert(1)>'}]);
 const profile=hostile.pages.get('clubs/test-club/index.html');
@@ -26,7 +26,7 @@ assert(profile.includes('https://example.test/clubs/test-club/'));
 assert(!profile.includes('<strong>Affiliation number:</strong>'));
 assert.equal(render([]).pages.size,1);
 const clubs = [
-  {...fixture, alternateNames:['Test MMA'], trainingInformation:'Classes for beginners.', trainingLocations:[{name:'Training hall',city:'Nugegoda'}], website:'https://club.example.test/'},
+  {...fixture, alternateNames:['Test MMA'], trainingInformation:'Classes for beginners.', trainingLocations:[{name:'Training hall',city:'Nugegoda'}], website:'https://club.example.test/', headInstructor:'Test Instructor', district:'Colombo District', phone:'0112345678', whatsapp:'0771234567'},
   {...fixture, slug:'future-club', name:'Future Club', city:'Kandy', description:'Future Club offers mixed martial arts training in Kandy.'}
 ];
 const future = render(clubs);
@@ -54,6 +54,16 @@ const richOrganization = schemas(richProfile).find(node => node['@type'] === 'Sp
 assert.deepEqual(richOrganization.alternateName, ['Test MMA']);
 assert.deepEqual(richOrganization.sameAs, ['https://club.example.test/']);
 assert.equal(richOrganization.location[0].address.addressLocality, 'Nugegoda');
+assert(richProfile.includes('<h2>Head instructor</h2><p>Test Instructor</p>'));
+assert(richProfile.includes('Colombo District'));
+assert(richProfile.includes('href="tel:+94112345678"'));
+assert(richProfile.includes('href="https://wa.me/94771234567"'));
+assert.equal(richOrganization.telephone, '+94112345678');
+assert.deepEqual(richOrganization.contactPoint, {'@type':'ContactPoint',contactType:'WhatsApp',telephone:'+94771234567',url:'https://wa.me/94771234567'});
+assert.deepEqual(richOrganization.member, {'@type':'Person',name:'Test Instructor',jobTitle:'Head Instructor'});
+const whatsappOnly=render([{...fixture,whatsapp:'+94 77 123 4567'}]).pages.get('clubs/test-club/index.html');
+assert(whatsappOnly.includes('href="https://wa.me/94771234567"'));
+assert(!whatsappOnly.includes('Contact the federation for club contact information.'));
 for(const file of ['clubs/index.html','clubs/countries/lk/index.html']) {
   const entities = schemas(enhanceSeo(future.pages.get(file), {file,siteUrl:'https://example.test'}));
   const list = entities.find(node => node['@type'] === 'ItemList');
@@ -61,7 +71,7 @@ for(const file of ['clubs/index.html','clubs/countries/lk/index.html']) {
   assert.equal(entities.find(node => node['@type'] === 'CollectionPage').mainEntity['@id'], list['@id']);
 }
 const unsafeText = '</script><script>alert(1)</script>';
-const unsafeProfile = render([{...fixture,alternateNames:[unsafeText],trainingInformation:unsafeText,trainingLocations:[{name:unsafeText,city:unsafeText}]}]).pages.get('clubs/test-club/index.html');
+const unsafeProfile = render([{...fixture,alternateNames:[unsafeText],headInstructor:unsafeText,district:unsafeText,trainingInformation:unsafeText,trainingLocations:[{name:unsafeText,city:unsafeText}]}]).pages.get('clubs/test-club/index.html');
 assert(!unsafeProfile.includes(unsafeText));
 schemas(unsafeProfile);
 const actual=JSON.parse((await readFile(new URL('../data/clubs.json',import.meta.url),'utf8')).replace(/^\uFEFF/,''));

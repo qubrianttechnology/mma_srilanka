@@ -12,7 +12,9 @@ Each club requires:
 - `description`: factual public club description.
 - `status`: `draft`, `approved` or `suspended`. Only approved clubs are published.
 
-Optional fields: `region`, `streetAddress`, `postalCode`, `phone`, `email`, `website` (HTTPS), `affiliationNumber`, `disciplines` (array of names), and `validUntil` (`YYYY-MM-DD`). Omit unknown fields; do not use placeholder numbers or fabricated addresses. Sri Lankan national telephone numbers are converted to +94 for click-to-call links.
+Optional fields: `region` (province/state), `district`, `streetAddress`, `postalCode`, `phone`, `whatsapp`, `email`, `website` (HTTPS), `headInstructor`, `affiliationNumber`, `disciplines` (array of names), and `validUntil` (`YYYY-MM-DD`). Omit unknown fields; do not use placeholder numbers or fabricated addresses. Sri Lankan national telephone numbers are converted to +94 for click-to-call and WhatsApp links. International WhatsApp numbers must include a leading + and country code. A distinct WhatsApp number is shown separately from the telephone number and represented as a club contact point. The head instructor is shown publicly and represented as a named club member with the Head Instructor role.
+
+Club data is public website content. Do not put NIC/passport numbers, private application records or other internal identifiers in this file. The International Japan Karate-Do Youshin Dojo listing uses the owner-supplied public club details; its supplied NIC number is excluded from both source data and generated pages.
 
 For a useful, searchable club profile, also provide verified public details where available:
 

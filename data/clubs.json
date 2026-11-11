@@ -18,6 +18,22 @@
       "email": "mmacolombolk@gmail.com",
       "website": "https://mmacolombo.com/",
       "status": "approved"
+    },
+    {
+      "slug": "international-japan-karate-do-youshin-dojo",
+      "name": "International Japan Karate-Do Youshin Dojo",
+      "countryCode": "LK",
+      "country": "Sri Lanka",
+      "city": "Delgoda",
+      "district": "Gampaha",
+      "region": "Western Province",
+      "streetAddress": "4/1/A, Meegahawaththa",
+      "description": "International Japan Karate-Do Youshin Dojo teaches full-contact karate, kickboxing, MMA and grappling in Delgoda, Gampaha, Sri Lanka.",
+      "headInstructor": "W.H. Ajith Kumara Somarathne",
+      "disciplines": ["Full Contact Karate", "Kickboxing", "Mixed Martial Arts", "Grappling"],
+      "phone": "0773017120",
+      "whatsapp": "0776050402",
+      "status": "approved"
     }
   ]
 }

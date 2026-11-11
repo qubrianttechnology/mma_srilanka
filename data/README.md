@@ -22,7 +22,7 @@ For a useful, searchable club profile, also provide verified public details wher
 
 Every approved club automatically receives a permanent profile URL, a search title containing its name and city, a description drawn from its own public description, matching social metadata, a canonical URL, club and breadcrumb structured data, and crawlable links from the main and country directories. Official websites, aliases, disciplines and venues are added to structured data when supplied. The sitemap is rebuilt from all published clubs, so no per-club SEO code or manual sitemap edit is needed. Give each club its own factual description; the SEO check rejects duplicate page descriptions and titles.
 
-The MMA Colombo details were checked against its [official website](https://mmacolombo.com/) and [contact page](https://mmacolombo.com/contact.html) on 11 November 2026. Its phone matches the existing federation record. The listed venues are HNB Building, Kohuwala and RY Academy and Studio, Wattala. Class times are intentionally referred to the club for confirmation. This directory's SEO changes apply to federation profiles, not to another website's source.
+The MMA Colombo details were checked against its [official website](https://mmacolombo.com/) and [contact page](https://mmacolombo.com/contact.html) on 11 November 2026. Its phone matches the existing federation record. Class locations are listed as MMA Colombo Kohuwala and MMA Colombo Wattala, using the owner's preferred class names. Class times are intentionally referred to the club for confirmation. This directory's SEO changes apply to federation profiles, not to another website's source.
 
 An approved club generates:
 

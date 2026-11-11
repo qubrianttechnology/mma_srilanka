@@ -4,6 +4,18 @@ The owner reports that the website appears for “SLMMAF” but is difficult to 
 
 The website name is **MMA Sri Lanka**. The organisation remains **Sri Lanka Mixed Martial Arts Federation**, abbreviated **SLMMAF**. Existing federation branding and user changes are preserved.
 
+## Club profiles — 11 November 2026
+
+MMA Colombo Combat Club now has a substantive federation profile with its official website, public email, alternate names, training disciplines, beginner/coaching information and confirmed Kohuwala/Wattala venues. Facts were checked against https://mmacolombo.com/ and https://mmacolombo.com/contact.html; the existing phone matches. Current timetables are referred to the club instead of duplicating information that may become stale. No ratings, fees, coordinates or unverified street addresses were added.
+
+All approved clubs, including future records in `data/clubs.json`, use the same build pipeline for location-specific titles, individual descriptions, social metadata, canonical URLs, crawlable directory/country links, breadcrumbs and sitemap entries. Optional verified details are visible in the page and reflected in the club entity. Each profile's WebPage identifies its club as the main entity; directory CollectionPages identify their own ItemLists. Existing profile URLs are preserved. The website's own source at mmacolombo.com is outside this repository and was not edited.
+
+The club tests cover additional approved clubs, directory discovery, entity relationships, input validation and escaping. The SEO check now checks sitemap publication rules and discovery links for every club record and checks optional official websites and locations. `npm test` and the SEO checks passed locally on 11 November 2026. Deployed to the existing Cloudflare Worker as version `42daeece-2e1e-4e51-b75e-880660bad5eb`. Post-deployment HTTP checks passed for all nine public sitemap pages at `https://mmasrilanka.com`: status 200, no noindex directives, current titles/descriptions and matching canonical URLs. Live club entities, venue details, directory/country links, sitemap and robots.txt were also verified. The ignored `.preview/verify-club-seo.mjs` contains the live verification.
+
+Search Console access could not be inspected: both available browser/Computer Use entry points failed to initialise with `failed to write kernel assets: The system cannot find the path specified. (os error 3)`. No Search Console sitemap or indexing request has been submitted in this session. In the verified `mmasrilanka.com` property, inspect `https://mmasrilanka.com/clubs/mma-colombo-combat-club/`, test the live URL, then request indexing. Submit `https://mmasrilanka.com/sitemap.xml` if it has not already been submitted. Future published clubs use that same sitemap. Google decides whether and when each eligible URL appears in search; neither search discovery through another provider nor a successful live fetch establishes Google indexing.
+
+The sections below record the earlier site-wide SEO work and owner instructions.
+
 ## Project and routes
 
 This is static HTML/CSS/JavaScript with a Node build, not a client-rendered framework. Cloudflare Workers Static Assets serves `dist/` through `src/index.js`; `wrangler.jsonc` runs the Worker first. `scripts/build.mjs` copies public assets, generates approved club pages, applies SEO metadata and generates the sitemap. GitHub Actions runs the existing checks. No applicable AGENTS.md was found in the checkout or ancestor directories.

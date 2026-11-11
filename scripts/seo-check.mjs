@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { enhanceSeo, pagePath } from './seo.mjs';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..','dist');
 const titles=new Set(), descriptions=new Set(), canonicals=new Set();
+const escapeHtml=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const files=(await readdir(root,{recursive:true})).filter(file=>file.endsWith('.html'));
 async function target(pathname) {
   let file=join(root,decodeURIComponent(pathname));
@@ -41,6 +42,9 @@ for(const file of files){
  const schemaIds=nodes.filter(n=>n['@id']).map(n=>n['@id']);
  assert.equal(new Set(schemaIds).size,schemaIds.length,`Duplicate schema entities: ${file}`);
  const page=nodes.find(n=>n['@id']===canonical+'#webpage');
+ const clubEntity=nodes.find(n=>n['@id']===canonical+'#organization');
+ const clubList=nodes.find(n=>n['@id']===canonical+'#clubs');
+ if(clubEntity || clubList) assert.equal(page.mainEntity?.['@id'],(clubEntity || clubList)['@id'],`Club main entity: ${file}`);
  if(page?.breadcrumb) assert(nodes.some(n=>n['@type']==='BreadcrumbList'&&n['@id']===page.breadcrumb['@id']),`Breadcrumb reference: ${file}`);
  const orgId=new URL(canonical).origin+'/#organization';
  const organizations=nodes.filter(n=>n['@id']===orgId);
@@ -74,6 +78,26 @@ assert((await readFile(join(root,'robots.txt'),'utf8')).includes(`Sitemap: ${ori
 const robots=await readFile(join(root,'robots.txt'),'utf8');
 assert(/User-agent: \*/.test(robots)&&/^Allow: \/$/m.test(robots),'Public crawling allowed');
 assert(!/^Disallow: \/$/m.test(robots),'Public site must not be blocked');
+const clubData=JSON.parse((await readFile(new URL('../data/clubs.json',import.meta.url),'utf8')).replace(/^\uFEFF/,''));
+const today=new Date().toISOString().slice(0,10);
+const directory=await readFile(join(root,'clubs/index.html'),'utf8');
+for(const club of clubData.clubs) {
+ const path=`clubs/${club.slug}/`;
+ const published=club.status==='approved'&&(!club.validUntil||club.validUntil>=today);
+ assert.equal(locations.includes(`${origin}/${path}`),published,`Club sitemap publication: ${club.slug}`);
+ if(!published)continue;
+ const html=await readFile(join(root,path,'index.html'),'utf8');
+ assert(html.includes(`<title>${escapeHtml(club.name)} | MMA in ${escapeHtml(club.city)}</title>`),`Club name and city in search title: ${club.slug}`);
+ assert(directory.includes(`href="/${path}"`),`Club discoverable without JavaScript: ${club.slug}`);
+ const country=await readFile(join(root,`clubs/countries/${club.countryCode.toLowerCase()}/index.html`),'utf8');
+ assert(country.includes(`href="/${path}"`),`Club country discovery: ${club.slug}`);
+ const entity=[...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(match=>JSON.parse(match[1])).find(node=>node['@id']===`${origin}/${path}#organization`);
+ assert.equal(entity.name,club.name);
+ assert.equal(entity.description,club.description);
+ if(club.website)assert(entity.sameAs.includes(club.website),`Official club website: ${club.slug}`);
+ if(club.alternateNames?.length)assert.deepEqual(entity.alternateName,club.alternateNames);
+ if(club.trainingLocations?.length)assert.equal(entity.location.length,club.trainingLocations.length);
+}
 const home=await readFile(join(root,'index.html'),'utf8');
 const snippet='<html><head><title>Test</title><meta name="description" content="Description"><link rel="canonical" href="https://test.invalid/about"></head><body><main id="main"></main></body></html>';
 const escaped=enhanceSeo(snippet,{file:'about.html',siteUrl:'https://test.invalid',verification:'test"><script>alert(1)</script>'});

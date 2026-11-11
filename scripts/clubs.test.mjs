@@ -1,6 +1,7 @@
 ﻿import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { renderClubs, validateClubs } from './clubs.mjs';
+import { enhanceSeo } from './seo.mjs';
 const template = await readFile(new URL('../clubs.html', import.meta.url), 'utf8');
 const fixture = {slug:'test-club',name:'Test Club',countryCode:'LK',country:'Sri Lanka',city:'Colombo',description:'Test fixture only.',status:'approved'};
 const render = clubs => renderClubs({ data:{clubs},template,siteUrl:'https://example.test',today:'2026-10-03' });
@@ -13,7 +14,7 @@ assert.equal(render([{...fixture,validUntil:'2026-10-04'}]).count,1);
 const international=render([fixture,{...fixture,slug:'second-country-club',name:'Another Country Test Club',countryCode:'GB',country:'United Kingdom',city:'London'}]);
 assert(!international.pages.get('clubs/countries/lk/index.html').includes('Another Country Test Club'));
 assert(international.pages.get('clubs/countries/gb/index.html').includes('Another Country Test Club'));
-for(const change of [{slug:'../unsafe'},{slug:'countries'},{website:'javascript:alert(1)'},{validUntil:'2026-02-30'},{phone:'bad" onclick="x'},{countryCode:'LK/'}]) assert.throws(()=>validateClubs({clubs:[{...fixture,...change}]}));
+for(const change of [{slug:'../unsafe'},{slug:'countries'},{website:'javascript:alert(1)'},{validUntil:'2026-02-30'},{phone:'bad" onclick="x'},{countryCode:'LK/'},{alternateNames:'Alias'},{alternateNames:[null]},{trainingInformation:[]},{trainingLocations:[null]},{trainingLocations:[{name:'Venue'}]},{trainingLocations:[{name:'Venue',city:'City',streetAddress:12}]}]) assert.throws(()=>validateClubs({clubs:[{...fixture,...change}]}));
 assert.throws(()=>validateClubs({clubs:[fixture,fixture]}));
 const hostile=render([{...fixture,name:'Club <script>alert(1)</script>',description:'<img src=x onerror=alert(1)>'}]);
 const profile=hostile.pages.get('clubs/test-club/index.html');
@@ -24,7 +25,46 @@ assert.match(profile, /href="\/styles\.css(?:\?[^"]*)?"/);
 assert(profile.includes('https://example.test/clubs/test-club/'));
 assert(!profile.includes('<strong>Affiliation number:</strong>'));
 assert.equal(render([]).pages.size,1);
+const clubs = [
+  {...fixture, alternateNames:['Test MMA'], trainingInformation:'Classes for beginners.', trainingLocations:[{name:'Training hall',city:'Nugegoda'}], website:'https://club.example.test/'},
+  {...fixture, slug:'future-club', name:'Future Club', city:'Kandy', description:'Future Club offers mixed martial arts training in Kandy.'}
+];
+const future = render(clubs);
+const schemas = html => [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].flatMap(match => { const value=JSON.parse(match[1]); return value['@graph'] || [value]; });
+for(const club of clubs) {
+  const file = `clubs/${club.slug}/index.html`;
+  const url = `https://example.test/clubs/${club.slug}/`;
+  const html = enhanceSeo(future.pages.get(file), {file,siteUrl:'https://example.test'});
+  assert(html.includes(`<title>${club.name} | MMA in ${club.city}</title>`));
+  assert(html.includes(`<meta name="description" content="${club.description.startsWith(club.name) ? club.description : club.name+'. '+club.description}">`));
+  assert(html.includes(`<link rel="canonical" href="${url}">`));
+  assert(future.paths.includes(`clubs/${club.slug}/`));
+  for(const directory of ['clubs/index.html','clubs/countries/lk/index.html']) assert(future.pages.get(directory).includes(`href="/clubs/${club.slug}/"`));
+  const entities = schemas(html);
+  const page = entities.find(node => node['@id'] === url+'#webpage');
+  const organization = entities.find(node => node['@id'] === url+'#organization');
+  assert.equal(page.mainEntity['@id'], organization['@id']);
+  assert.equal(organization.name, club.name);
+}
+const richProfile = future.pages.get('clubs/test-club/index.html');
+assert(richProfile.includes('Also known as Test MMA.'));
+assert(richProfile.includes('Classes for beginners.'));
+assert(richProfile.includes('<strong>Nugegoda</strong>'));
+const richOrganization = schemas(richProfile).find(node => node['@type'] === 'SportsOrganization' && node.name === fixture.name);
+assert.deepEqual(richOrganization.alternateName, ['Test MMA']);
+assert.deepEqual(richOrganization.sameAs, ['https://club.example.test/']);
+assert.equal(richOrganization.location[0].address.addressLocality, 'Nugegoda');
+for(const file of ['clubs/index.html','clubs/countries/lk/index.html']) {
+  const entities = schemas(enhanceSeo(future.pages.get(file), {file,siteUrl:'https://example.test'}));
+  const list = entities.find(node => node['@type'] === 'ItemList');
+  assert.equal(list.numberOfItems, 2);
+  assert.equal(entities.find(node => node['@type'] === 'CollectionPage').mainEntity['@id'], list['@id']);
+}
+const unsafeText = '</script><script>alert(1)</script>';
+const unsafeProfile = render([{...fixture,alternateNames:[unsafeText],trainingInformation:unsafeText,trainingLocations:[{name:unsafeText,city:unsafeText}]}]).pages.get('clubs/test-club/index.html');
+assert(!unsafeProfile.includes(unsafeText));
+schemas(unsafeProfile);
 const actual=JSON.parse((await readFile(new URL('../data/clubs.json',import.meta.url),'utf8')).replace(/^\uFEFF/,''));
 const published=renderClubs({data:actual,template,siteUrl:'https://mmasrilanka.com'});
 assert(published.pages.get('clubs/mma-colombo-combat-club/index.html').includes('tel:+94753414414'));
-console.log('Passed: affiliation publication rules, country isolation, unsafe input rejection, escaping, structured data, nested assets, empty directory and supplied club phone.');
+console.log('Passed: club publication rules, future club SEO, directory discovery, entity relationships, public training facts, validation and escaping.');

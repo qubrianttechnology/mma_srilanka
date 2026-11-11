@@ -14,6 +14,16 @@ Each club requires:
 
 Optional fields: `region`, `streetAddress`, `postalCode`, `phone`, `email`, `website` (HTTPS), `affiliationNumber`, `disciplines` (array of names), and `validUntil` (`YYYY-MM-DD`). Omit unknown fields; do not use placeholder numbers or fabricated addresses. Sri Lankan national telephone numbers are converted to +94 for click-to-call links.
 
+For a useful, searchable club profile, also provide verified public details where available:
+
+- `alternateNames`: an array of actual short names used by the club. These appear visibly on the profile and in structured data; do not add a list of search keywords.
+- `trainingInformation`: factual text about coaching, age groups, beginner access and how to join. Do not invent fees, timetables or credentials.
+- `trainingLocations`: an array of objects containing `name` (the venue), `city` and an optional confirmed `streetAddress`. Each location appears in the profile and club structured data. Omit unconfirmed venues.
+
+Every approved club automatically receives a permanent profile URL, a search title containing its name and city, a description drawn from its own public description, matching social metadata, a canonical URL, club and breadcrumb structured data, and crawlable links from the main and country directories. Official websites, aliases, disciplines and venues are added to structured data when supplied. The sitemap is rebuilt from all published clubs, so no per-club SEO code or manual sitemap edit is needed. Give each club its own factual description; the SEO check rejects duplicate page descriptions and titles.
+
+The MMA Colombo details were checked against its [official website](https://mmacolombo.com/) and [contact page](https://mmacolombo.com/contact.html) on 11 November 2026. Its phone matches the existing federation record. The listed venues are HNB Building, Kohuwala and RY Academy and Studio, Wattala. Class times are intentionally referred to the club for confirmation. This directory's SEO changes apply to federation profiles, not to another website's source.
+
 An approved club generates:
 
 - Its directory entry at `/clubs/`.
@@ -32,3 +42,5 @@ The default public origin is `https://mmasrilanka.com`, matching the existing ro
 After publishing the production site, verify the domain in Google Search Console and submit `/sitemap.xml`. Club pages must be publicly reachable. Indexing and ranking remain Google's decision and are not guaranteed. No Search Console submission or deployment is performed by the build.
 
 Run `node scripts/clubs.test.mjs` to check validation, publication rules, country pages and escaping.
+
+Run `npm test` and `npm run check:seo` before deployment. The checks cover automatic SEO for additional club records, valid entity references, visible training details, official website links, publication rules and sitemap/directory discovery for every currently approved club. After deployment, inspect the club URL in the verified domain's Google Search Console property and request indexing, then submit `https://mmasrilanka.com/sitemap.xml` once. Google can discover future club URLs from that same sitemap after each build and deployment; inclusion and ranking are not guaranteed. The build does not send Search Console requests.

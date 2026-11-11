@@ -22,9 +22,11 @@ export function enhanceSeo(html, { file, siteUrl, verification = '' }) {
   // Preserve club facts and existing profile breadcrumbs rather than inventing local-business data.
   const club = route.startsWith('/clubs/') && schemas.find(item => item['@type'] === 'SportsOrganization' && item.url === canonical);
   const breadcrumb = schemas.find(item => item['@type'] === 'BreadcrumbList');
+  const clubList = schemas.find(item => item['@type'] === 'ItemList' && item['@id'] === canonical + '#clubs');
   const pageType = route === '/about' ? 'AboutPage' : route === '/contact' ? 'ContactPage' : route === '/clubs/' || route.startsWith('/clubs/countries/') || route === '/news' ? 'CollectionPage' : 'WebPage';
   const graph = [{ '@type': pageType, '@id': canonical + '#webpage', url: canonical, name: title, description, inLanguage:'en-LK', isPartOf:{'@id':websiteId}, publisher:{'@id':orgId}, about: club ? {'@id':club['@id']} : {'@id':orgId} }];
   if (route === '/' || route === '/about') graph[0].mainEntity = { '@id': orgId };
+  if (club || clubList) graph[0].mainEntity = { '@id': (club || clubList)['@id'] };
   if (route === '/') graph.push({ '@type':'WebSite','@id':websiteId,url:siteUrl+'/',name:'MMA Sri Lanka',alternateName:['SLMMAF','Sri Lanka Mixed Martial Arts Federation'],inLanguage:'en-LK',publisher:{'@id':orgId} });
   const label = { '/about':'About SLMMAF', '/programmes':'MMA programmes', '/clubs/':'Affiliated clubs', '/events':'MMA events', '/news':'Federation news', '/contact':'Contact' }[route];
   if (label && route !== '/') {

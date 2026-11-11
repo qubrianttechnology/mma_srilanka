@@ -104,8 +104,8 @@ export default {
         url.hostname = 'mmasrilanka.com';
         url.port = '';
       }
-      if (originalPath === '/assets/slmmaf-logo.png' || originalPath === '/assets/federation-emblem.png') {
-        url.pathname = '/assets/slmmaf-official-logo.png';
+      if (['/assets/slmmaf-logo.png', '/assets/federation-emblem.png', '/assets/slmmaf-official-logo.png'].includes(originalPath)) {
+        url.pathname = '/assets/slmmaf-emblem-transparent.png';
       } else if (/^\/(?:home|index)(?:\.html|\/)?$/.test(originalPath)) url.pathname = '/';
       else if (originalPath.endsWith('/index.html')) url.pathname = originalPath.slice(0, -10);
       else {

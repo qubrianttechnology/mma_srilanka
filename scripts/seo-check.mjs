@@ -84,7 +84,7 @@ const today=new Date().toISOString().slice(0,10);
 const directory=await readFile(join(root,'clubs/index.html'),'utf8');
 for(const club of clubData.clubs) {
  const path=`clubs/${club.slug}/`;
- const published=club.status==='approved'&&(!club.validUntil||club.validUntil>=today);
+ const published=club.status==='approved';
  assert.equal(locations.includes(`${origin}/${path}`),published,`Club sitemap publication: ${club.slug}`);
  if(!published)continue;
  const html=await readFile(join(root,path,'index.html'),'utf8');

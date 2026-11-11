@@ -6,8 +6,8 @@ const template = await readFile(new URL('../clubs.html', import.meta.url), 'utf8
 const fixture = {slug:'test-club',name:'Test Club',countryCode:'LK',country:'Sri Lanka',city:'Colombo',description:'Test fixture only.',status:'approved'};
 const render = clubs => renderClubs({ data:{clubs},template,siteUrl:'https://example.test',today:'2026-10-03' });
 const result=render([fixture,{...fixture,slug:'draft-club',status:'draft'},{...fixture,slug:'suspended-club',status:'suspended'},{...fixture,slug:'expired-club',validUntil:'2026-10-02'}]);
-assert.equal(result.count,1);
-assert.deepEqual(result.paths,['clubs/','clubs/countries/lk/','clubs/test-club/']);
+assert.equal(result.count,2);
+assert.deepEqual(result.paths,['clubs/','clubs/countries/lk/','clubs/test-club/','clubs/expired-club/']);
 assert(!result.pages.get('clubs/index.html').includes('draft-club'));
 assert.equal(render([{...fixture,validUntil:'2026-10-03'}]).count,1);
 assert.equal(render([{...fixture,validUntil:'2026-10-04'}]).count,1);

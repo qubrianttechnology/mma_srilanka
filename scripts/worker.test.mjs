@@ -1,8 +1,7 @@
 ﻿import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { DatabaseSync } from 'node:sqlite';
-const source=await readFile(new URL('../src/index.js',import.meta.url),'utf8');
-const {default:worker}=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
+const {default:worker}=await import('../src/index.js');
 const env={ASSETS:{fetch:async()=>new Response('ok',{status:200,headers:{'Content-Type':'text/html'}})}};
 for(const [input,expected] of [['/index.html','/'],['/index','/'],['/index/','/'],['/home','/'],['/home/','/'],['/home.html','/'],['/about.html','/about'],['/about/','/about'],['/clubs','/clubs/'],['/clubs.html','/clubs/'],['/clubs/mma-colombo-combat-club','/clubs/mma-colombo-combat-club/'],['/clubs/countries/lk/index.html','/clubs/countries/lk/']]){
  const response=await worker.fetch(new Request('https://example.test'+input+'?ref=test'),env);

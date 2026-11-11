@@ -269,6 +269,9 @@ h2{line-height:.94;letter-spacing:-1px}
 .club-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
 .club-card { display: flex; flex-direction: column; align-items: flex-start; padding: 25px; background: #fffcf6; border: 1px solid #ded7c9; border-top: 3px solid var(--gold); min-width: 0; }
 .club-status { display: inline-block; background: #f0e5d0; color: #65451d; font-size: 10px; font-weight: 700; letter-spacing: .7px; padding: 6px 9px; text-transform: uppercase; }
+.club-status--expired { background: #fbe4e1; color: #8c2420; }
+.club-status--pending, .club-status--scheduled { background: #e9e8e5; color: #514c44; }
+.club-affiliation-dates { font-size: 13px; line-height: 1.9; }
 .club-card h2 { font-size: 32px; line-height: 1.1; letter-spacing: -.3px; margin: 20px 0 10px; overflow-wrap: anywhere; }
 .club-card h2 a:hover { color: var(--red); }
 .club-card p { font-size: 13px; color: #605a50; margin: 10px 0; }

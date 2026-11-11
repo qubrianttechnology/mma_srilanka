@@ -67,6 +67,7 @@ for (const file of files) {
 }
 
 await cp(join(root, 'assets'), join(output, 'assets'), { recursive: true });
+await cp(join(root, 'src/affiliation-status.mjs'), join(output, 'affiliation-status.mjs'));
 const clubTemplate = await readFile(join(output, 'clubs.html'), 'utf8');
 const clubSite = renderClubs({ data: clubData, template: clubTemplate, siteUrl });
 await writeAffiliationAssets({ clubs: clubSite.clubs, siteUrl, output });

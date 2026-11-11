@@ -106,6 +106,8 @@ Run `npx wrangler d1 migrations apply REGISTRATIONS --local` before using the fo
 - `contact.html`: Membership and contact
 - `clubs.html`: Directory template; the build generates `/clubs/` and club profiles from `data/clubs.json`
 
+Club issue dates, annual expiry, renewal and the MMA Colombo exception are documented in [docs/club-affiliation-dates.md](docs/club-affiliation-dates.md).
+
 All pages share `styles.css` and `script.js`. Navigation is included in each HTML file, so update header and footer links across all seven pages when changing the menu. The build includes every page in `dist/`; Cloudflare serves the corresponding extension-free URLs listed in the sitemap.
 
 ## Affiliated clubs

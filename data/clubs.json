@@ -38,7 +38,8 @@
       "email": "mmacolombolk@gmail.com",
       "website": "https://mmacolombo.com/",
       "status": "approved",
-      "affiliationNumber": "SLMMAF-CLUB-0001"
+      "affiliationNumber": "SLMMAF-CLUB-0001",
+      "affiliationRenewalRequired": false
     },
     {
       "slug": "international-japan-karate-do-youshin-dojo",
@@ -60,7 +61,8 @@
       "phone": "0773017120",
       "whatsapp": "0776050402",
       "status": "approved",
-      "affiliationNumber": "SLMMAF-CLUB-0002"
+      "affiliationNumber": "SLMMAF-CLUB-0002",
+      "affiliationIssuedOn": "2026-11-11"
     }
   ],
   "affiliationSequence": 2

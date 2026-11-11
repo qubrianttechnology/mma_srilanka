@@ -9,7 +9,7 @@
     "dev": "npm run build && wrangler dev",
     "deploy": "npm run build && wrangler deploy",
     "check:seo": "npm run build && node scripts/seo-check.mjs",
-    "test": "node scripts/clubs.test.mjs && node scripts/affiliations.test.mjs && node scripts/worker.test.mjs"
+    "test": "node scripts/clubs.test.mjs && node scripts/affiliations.test.mjs && node scripts/affiliation-status.test.mjs && node scripts/worker.test.mjs"
   },
   "devDependencies": {
     "jsqr": "^1.4.0",

@@ -1,4 +1,8 @@
-﻿const filterForm = document.querySelector('[data-club-filters]');
+import { affiliationState } from '/affiliation-status.mjs';
+
+const filterForm = document.querySelector('[data-club-filters]');
+
+
 if (filterForm) {
   const cards = [...document.querySelectorAll('[data-club]')];
   const count = document.querySelector('[data-club-count]');
@@ -15,7 +19,7 @@ if (filterForm) {
       card.hidden = !matches;
       if (matches) visible++;
     });
-    count.textContent = `${visible} affiliated ${visible === 1 ? 'club' : 'clubs'}${country.value ? ` in ${country.selectedOptions[0].textContent}` : ''}`;
+    count.textContent = `${visible} ${visible === 1 ? 'club' : 'clubs'} listed${country.value ? ` in ${country.selectedOptions[0].textContent}` : ''}`;
     empty.hidden = visible !== 0;
     if (updateUrl) {
       const url = new URL(location.href);
@@ -45,3 +49,17 @@ if (filterForm) {
   window.addEventListener('popstate', readUrl);
   readUrl();
 }
+function refreshAffiliation() {
+  document.querySelectorAll('[data-affiliation-badge]').forEach(badge => {
+    const state = affiliationState(badge.dataset.affiliationBadge, undefined, badge.dataset.affiliationRenewal !== 'exempt');
+    badge.textContent = state.label;
+    badge.className = `club-status club-status--${state.key}`;
+  });
+  document.querySelectorAll('[data-affiliation-summary]').forEach(summary => {
+    summary.textContent = affiliationState(summary.dataset.affiliationSummary, undefined, summary.dataset.affiliationRenewal !== 'exempt').summary;
+  });
+}
+refreshAffiliation();
+setInterval(refreshAffiliation, 60000);
+window.addEventListener('focus', refreshAffiliation);
+document.addEventListener('visibilitychange', refreshAffiliation);

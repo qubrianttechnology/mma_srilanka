@@ -1,4 +1,5 @@
 import { affiliationAssetPaths, validateAffiliations } from './affiliations.mjs';
+import { affiliationState, formatAffiliationDate, isCalendarDate, sriLankaDate } from '../src/affiliation-status.mjs';
 
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const jsonScript = value => JSON.stringify(value).replace(/</g, '\\u003c');
@@ -30,10 +31,12 @@ export function validateClubs(data) {
     if (countries.has(club.countryCode) && countries.get(club.countryCode) !== club.country) throw new Error(`Use a consistent name for country ${club.countryCode}`);
     countries.set(club.countryCode, club.country);
     if (!['draft','approved','suspended'].includes(club.status)) throw new Error(`Invalid affiliation status: ${club.slug}`);
-    for (const key of ['region','district','streetAddress','postalCode','phone','whatsapp','email','website','headInstructor','affiliationNumber','validUntil','trainingInformation']) {
+    for (const key of ['region','district','streetAddress','postalCode','phone','whatsapp','email','website','headInstructor','affiliationNumber','affiliationIssuedOn','validUntil','trainingInformation']) {
       if (club[key] !== undefined && typeof club[key] !== 'string') throw new Error(`${key} must be text: ${club.slug}`);
     }
     if (club.validUntil && (!/^\d{4}-\d{2}-\d{2}$/.test(club.validUntil) || !Number.isFinite(Date.parse(club.validUntil)) || new Date(club.validUntil).toISOString().slice(0,10) !== club.validUntil)) throw new Error(`Invalid validUntil date: ${club.slug}`);
+    if (club.affiliationIssuedOn !== undefined && !isCalendarDate(club.affiliationIssuedOn)) throw new Error(`Invalid affiliationIssuedOn date: ${club.slug}`);
+    if (club.affiliationRenewalRequired !== undefined && typeof club.affiliationRenewalRequired !== 'boolean') throw new Error(`affiliationRenewalRequired must be a boolean: ${club.slug}`);
     if (club.phone && !/^\+?[\d ()-]{6,25}$/.test(club.phone)) throw new Error(`Invalid public phone number: ${club.slug}`);
     if (club.whatsapp && !/^\+[1-9]\d{6,14}$/.test(phoneHref(club, club.whatsapp))) throw new Error(`Use a valid international WhatsApp number or a Sri Lankan national number: ${club.slug}`);
     if (club.email && !/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(club.email)) throw new Error(`Invalid public email: ${club.slug}`);
@@ -65,14 +68,23 @@ function metadata(html, title, description, url) {
 function schema(html, value) {
   return html.replace('</head>', `<script type="application/ld+json">${jsonScript(value)}</script>\n</head>`);
 }
-function card(club) {
+function badge(club, today) {
+  const state = affiliationState(club.affiliationIssuedOn, today, club.affiliationRenewalRequired !== false);
+  return `<span data-affiliation-badge="${club.affiliationIssuedOn || ''}"${club.affiliationRenewalRequired === false ? ' data-affiliation-renewal="exempt"' : ''} class="club-status club-status--${state.key}">${state.label}</span>`;
+}
+function dates(club) {
+  const state = affiliationState(club.affiliationIssuedOn);
+  return club.affiliationIssuedOn ? `<p class="club-affiliation-dates"><strong>Affiliation issued:</strong> <time datetime="${club.affiliationIssuedOn}">${formatAffiliationDate(club.affiliationIssuedOn)}</time><br><strong>Renewal due:</strong> <time datetime="${state.expiresOn}">${formatAffiliationDate(state.expiresOn)}</time></p>` : '';
+}
+function card(club, today) {
   return `<article class="club-card" data-club data-country="${escapeHtml(club.countryCode)}" data-region="${escapeHtml(club.region || club.city)}" data-search="${escapeHtml([club.name,...(club.alternateNames || []),location(club),...(club.trainingLocations || []).map(place => place.city),...(club.disciplines || [])].join(' ').toLowerCase())}">
-    <span class="club-status">SLMMAF affiliated</span><h2><a href="/${clubPath(club)}">${escapeHtml(club.name)}</a></h2>
+    ${badge(club, today)}<h2><a href="/${clubPath(club)}">${escapeHtml(club.name)}</a></h2>
     <p class="club-location">${escapeHtml(location(club))}</p><p>${escapeHtml(club.description)}</p>
     ${club.affiliationNumber ? `<p class="club-ref">Affiliation: ${escapeHtml(club.affiliationNumber)}</p>` : ''}
+    ${dates(club)}
     <a class="arrow-link" href="/${clubPath(club)}">View club profile <span aria-hidden="true">&#8599;</span></a></article>`;
 }
-function directoryContent(clubs, selectedCountry = '') {
+function directoryContent(clubs, selectedCountry = '', today) {
   if (!clubs.length) return `<div class="club-empty"><h2>Club listings are coming soon.</h2><p>Contact the federation to ask about affiliated clubs near you.</p><a class="arrow-link" href="/contact.html">Ask about affiliated clubs <span aria-hidden="true">&#8599;</span></a></div>`;
   const countries = [...new Map(clubs.map(c => [c.countryCode,c])).values()].sort((a,b)=>a.country.localeCompare(b.country));
   return `<form class="club-filters" data-club-filters hidden role="search" aria-label="Find an affiliated club">
@@ -80,26 +92,27 @@ function directoryContent(clubs, selectedCountry = '') {
     <label>Country<select name="country"><option value="">All countries</option>${countries.map(c=>`<option value="${escapeHtml(c.countryCode)}"${selectedCountry===c.countryCode?' selected':''}>${escapeHtml(c.country)}</option>`).join('')}</select></label>
     <button type="reset" class="club-reset">Clear filters</button></form>
     <nav class="country-links" aria-label="Browse clubs by country">${countries.map(c=>`<a href="/${countryPath(c)}">${escapeHtml(c.country)}</a>`).join('')}</nav>
-    <p class="club-result-count" data-club-count role="status" aria-live="polite">${clubs.length} affiliated ${clubs.length===1?'club':'clubs'}</p>
-    <div class="club-grid">${clubs.map(card).join('\n')}</div>
+    <p class="club-result-count" data-club-count role="status" aria-live="polite">${clubs.length} ${clubs.length===1?'club':'clubs'} listed</p>
+    <div class="club-grid">${clubs.map(club => card(club, today)).join('\n')}</div>
     <div class="club-empty" data-no-clubs hidden><h2>No matching clubs.</h2><p>Try another location or clear your filters.</p><button type="button" class="club-reset" data-clear-clubs>Clear filters</button></div>`;
 }
-function profileContent(club) {
+function profileContent(club, today) {
   const e = escapeHtml;
   const affiliationAssets = club.affiliationNumber ? affiliationAssetPaths(club) : null;
   const address = [club.streetAddress,club.city,club.district,club.region,club.postalCode,club.country].filter(Boolean).join(', ');
   return `<main id="main"><section class="section club-profile"><div class="container">
     <nav class="club-breadcrumb" aria-label="Breadcrumb"><a href="/clubs.html">Affiliated clubs</a><span aria-hidden="true">/</span><a href="/${countryPath(club)}">${e(club.country)}</a><span aria-hidden="true">/</span><span aria-current="page">${e(club.name)}</span></nav>
-    <span class="club-status">SLMMAF affiliated club</span><h1 class="page-title">${e(club.name)}</h1><p class="directory-intro">${e(location(club))}</p>
+    ${badge(club, today)}<h1 class="page-title">${e(club.name)}</h1><p class="directory-intro">${e(location(club))}</p>
     <div class="club-profile-grid"><div><h2>About the club</h2><p>${e(club.description)}</p>
     ${club.alternateNames?.length ? `<p>Also known as ${club.alternateNames.map(e).join(' / ')}.</p>` : ''}
     ${club.headInstructor ? `<h2>Head instructor</h2><p>${e(club.headInstructor)}</p>` : ''}
     ${club.disciplines?.length ? `<h2>Training disciplines</h2><ul class="club-disciplines">${club.disciplines.map(d=>`<li>${e(d)}</li>`).join('')}</ul>`:''}
     ${club.trainingInformation ? `<h2>Training at ${e(club.name)}</h2><p>${e(club.trainingInformation)}</p>` : ''}
     ${club.trainingLocations?.length ? `<h2>Training locations</h2><ul>${club.trainingLocations.map(place => `<li><strong>${e(place.city)}</strong> — ${e([place.name, place.streetAddress].filter(Boolean).join(', '))}</li>`).join('')}</ul><p>Contact the club to confirm class times and availability before visiting.</p>` : ''}
-    <h2>Federation affiliation</h2><p>Affiliated with the Sri Lanka Mixed Martial Arts Federation (SLMMAF).</p>
+    <h2>Federation affiliation</h2><p data-affiliation-summary="${club.affiliationIssuedOn || ''}"${club.affiliationRenewalRequired === false ? ' data-affiliation-renewal="exempt"' : ''}>${affiliationState(club.affiliationIssuedOn, today, club.affiliationRenewalRequired !== false).summary}</p>
     ${club.affiliationNumber?`<p><strong>Affiliation number:</strong> ${e(club.affiliationNumber)}</p>`:''}
-    ${club.validUntil?`<p><strong>Valid until:</strong> <time datetime="${e(club.validUntil)}">${e(club.validUntil)}</time></p>`:''}
+    ${dates(club)}
+    ${club.affiliationRenewalRequired !== false ? '<p>Affiliation is valid for one year from the issue date and must then be renewed.</p>' : ''}
     <a class="arrow-link" href="/contact.html">Enquire about affiliation <span aria-hidden="true">&#8599;</span></a></div>
     <aside class="club-contact" aria-labelledby="club-contact-title"><h2 id="club-contact-title">Location &amp; contact</h2><address>${e(address)}</address>
     ${club.phone?`<a href="tel:${e(phoneHref(club))}">${e(club.phone)}</a>`:''}
@@ -113,11 +126,11 @@ function profileContent(club) {
     </div></section></main>`;
 }
 
-export function renderClubs({ data, template, siteUrl, today = new Date().toISOString().slice(0,10) }) {
+export function renderClubs({ data, template, siteUrl, today = sriLankaDate() }) {
   // Keep MMA Colombo first, then preserve the order in which other clubs were added.
-  const clubs = validateClubs(data).filter(c=>c.status==='approved' && (!c.validUntil || c.validUntil>=today)).sort((a,b)=>Number(b.slug==='mma-colombo-combat-club')-Number(a.slug==='mma-colombo-combat-club'));
+  const clubs = validateClubs(data).filter(c=>c.status==='approved').sort((a,b)=>Number(b.slug==='mma-colombo-combat-club')-Number(a.slug==='mma-colombo-combat-club'));
   const base = rootLinks(template);
-  const replaceDirectory = (html, list, selected='') => html.replace(/<!-- CLUB_DIRECTORY_START -->[\s\S]*?<!-- CLUB_DIRECTORY_END -->/,()=>`<!-- CLUB_DIRECTORY_START -->${directoryContent(list,selected)}<!-- CLUB_DIRECTORY_END -->`);
+  const replaceDirectory = (html, list, selected='') => html.replace(/<!-- CLUB_DIRECTORY_START -->[\s\S]*?<!-- CLUB_DIRECTORY_END -->/,()=>`<!-- CLUB_DIRECTORY_START -->${directoryContent(list,selected,today)}<!-- CLUB_DIRECTORY_END -->`);
   const itemList = (list, path) => ({'@context':'https://schema.org','@type':'ItemList','@id':`${siteUrl}/${path}#clubs`,numberOfItems:list.length,itemListElement:list.map((c,i)=>({'@type':'ListItem',position:i+1,name:c.name,url:`${siteUrl}/${clubPath(c)}`}))});
   let directory = replaceDirectory(base,clubs);
   if(clubs.length) directory=schema(directory,itemList(clubs, 'clubs/'));
@@ -134,8 +147,10 @@ export function renderClubs({ data, template, siteUrl, today = new Date().toISOS
   for(const club of clubs){
     const path=clubPath(club);const url=`${siteUrl}/${path}`;
     let html=metadata(base,`${club.name} | MMA in ${club.city}`,searchDescription(club),url);
-    html=html.replace(/<main id="main">[\s\S]*?<\/main>/,()=>profileContent(club));
-    const organization={'@context':'https://schema.org','@type':'SportsOrganization','@id':url+'#organization',name:club.name,url,description:club.description,sport:'Mixed Martial Arts',memberOf:{'@id':siteUrl+'/#organization'},address:{'@type':'PostalAddress',addressLocality:club.city,addressCountry:club.countryCode}};
+    html=html.replace(/<main id="main">[\s\S]*?<\/main>/,()=>profileContent(club,today));
+    const organization={'@context':'https://schema.org','@type':'SportsOrganization','@id':url+'#organization',name:club.name,url,description:club.description,sport:'Mixed Martial Arts',address:{'@type':'PostalAddress',addressLocality:club.city,addressCountry:club.countryCode}};
+    if (club.affiliationRenewalRequired === false) organization.memberOf = {'@id':siteUrl+'/#organization'};
+    else if (club.affiliationIssuedOn) organization.memberOf = {'@type':'OrganizationRole',startDate:club.affiliationIssuedOn,endDate:affiliationState(club.affiliationIssuedOn).expiresOn,memberOf:{'@id':siteUrl+'/#organization'}};
     if(club.region)organization.address.addressRegion=club.region;
     if(club.streetAddress)organization.address.streetAddress=club.streetAddress;
     if(club.postalCode)organization.address.postalCode=club.postalCode;

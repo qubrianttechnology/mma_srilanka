@@ -370,6 +370,22 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, .sidebar::-webkit-scrollbar { 
 .event-date span { color: #bdb4a7; font-size: 16px; margin-top: 6px; }
 .news-body .card-title, .news-side .card-title { font: 700 29px/1.12 var(--display); text-transform: uppercase; letter-spacing: 0; margin: 16px 0; }
 .federation-reading { padding-top: 0; }
+.news-lead--poster { grid-template-columns: minmax(0, 1fr); }
+.news-visual--poster { display: block; min-height: 0; padding: 0; background: #080808; }
+.news-visual--poster img { width: 100%; height: auto; border-radius: 0; }
+.news-lead:hover .news-visual--poster img { transform: none; }
+.event-feature { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); margin: 38px 0 44px; border: 1px solid #e7b95740; background: #141416; scroll-margin-top: 115px; }
+.event-feature-poster { display: block; align-self: start; }
+.event-feature-poster img { width: 100%; height: auto; }
+.event-feature-body { padding: clamp(24px, 3vw, 42px); min-width: 0; }
+.event-feature-body h2 { font: 800 clamp(30px, 3.2vw, 46px)/1.05 var(--display); letter-spacing: -.3px; margin: 20px 0; }
+.event-feature-date { color: var(--gold); font-size: 21px; font-weight: 700; margin: 0 0 5px; }
+.event-feature-venue { font-weight: 600; margin: 0 0 22px; }
+.event-feature-body > p:not(.event-feature-date):not(.event-feature-venue), .event-feature-body ul { color: #c9c3b9; font-size: 14px; line-height: 1.8; }
+.event-feature-body ul { padding-left: 20px; margin: 18px 0 25px; }
+.event-feature-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 18px; }
+.event-feature-phone { color: var(--gold); font-size: 13px; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
+@media (max-width: 800px) { .event-feature { grid-template-columns: minmax(0, 1fr); } .event-feature-body h2 { font-size: 36px; } }
 .federation-reading article { border-top: 1px solid var(--line); padding: 28px 0; scroll-margin-top: 110px; }
 .federation-reading h2 { font-size: 34px; line-height: 1.1; margin: 0 0 18px; }
 .federation-reading p { color: #57534e; line-height: 1.8; max-width: 850px; font-size: 15px; }

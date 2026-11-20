@@ -1,6 +1,7 @@
 import { enhanceSeo } from './seo.mjs';
 import { renderClubs, validateClubs } from './clubs.mjs';
 import { writeAffiliationAssets } from './affiliations.mjs';
+import { renderHomeUpdates } from './home-updates.mjs';
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -65,6 +66,11 @@ for (const file of files) {
     await cp(source, destination);
   }
 }
+
+const [homeHtml, eventsHtml, programmesHtml] = await Promise.all(
+  ['index.html', 'events.html', 'programmes.html'].map(file => readFile(join(output, file), 'utf8'))
+);
+await writeFile(join(output, 'index.html'), renderHomeUpdates(homeHtml, eventsHtml, programmesHtml, siteUrl));
 
 await cp(join(root, 'assets'), join(output, 'assets'), { recursive: true });
 // Package the existing PNG artwork unchanged into a conventional root ICO.

@@ -122,9 +122,6 @@ h2{line-height:.94;letter-spacing:-1px}
 .home-pathways .section-kicker { margin-bottom: 20px; }
 .home-pathways .programme-card { min-height: 280px; }
 .home-pathways .section-head.row { align-items: flex-end; }
-.home-event-preview { display: grid; grid-template-columns: 1.2fr 1fr; gap: 50px; border-top: 1px solid #e7b95733; padding-top: 30px; }
-.home-event-preview h3 { font: 700 32px/1.5 var(--display); text-transform: uppercase; margin: 0; }
-.home-event-preview p { font-size: 14px; line-height: 1.8; color: #b3aaa0; margin-bottom: 0; }
 .home-contact .join-inner { align-items: center; }
 .home-contact-copy p { color: #d9c7c4; font-size: 15px; line-height: 1.9; margin: 0 0 25px; }
 .home-email { display: block; margin-top: 20px; color: #e7c997; font-size: 13px; width: fit-content; }
@@ -133,8 +130,6 @@ h2{line-height:.94;letter-spacing:-1px}
   .home-summary { padding-block: 55px; }
   .home-pathways .section-head.row { align-items: flex-start; }
   .home-pathways .programme-card { min-height: 260px; }
-  .home-event-preview { grid-template-columns: 1fr; gap: 20px; }
-  .home-event-preview h3 { font-size: 26px; }
 }
 
 .contact-details { display: grid; gap: 20px; margin-top: 35px; font-style: normal; }
@@ -184,8 +179,6 @@ h2{line-height:.94;letter-spacing:-1px}
 .programme-card a { margin-top: 0; }
 .event-list article { padding: 24px 16px; grid-template-columns: 120px minmax(0, 1fr) 44px; gap: 20px; }
 .event-list p, .event-list time span { color: #bdb4a7; }
-.home-event-preview { padding-top: 24px; gap: 32px; }
-.home-event-preview h3 { font-size: 28px; line-height: 1.4; }
 .news-visual { min-height: 260px; }
 .news-body { padding: 25px; }
 .news-body h3, .news-side h3 { margin: 16px 0; font-size: 29px; line-height: 1.12; }
@@ -237,9 +230,6 @@ h2{line-height:.94;letter-spacing:-1px}
   .event-list article > a { width: 34px; height: 38px; }
   .event-list p { display: block; font-size: 12px; line-height: 1.6; }
   .event-list h3 { line-height: 1.15; }
-  .home-event-preview { grid-template-columns: 1fr; gap: 14px; }
-  .home-event-preview h3 { font-size: 25px; }
-  .home-event-preview p { margin-top: 10px; }
   .news-visual { min-height: 230px; padding: 20px; }
   .news-visual img { width: 185px; }
   .news-visual b { bottom: 12px; font-size: 7px; }
@@ -615,15 +605,14 @@ body.registration-confirmed { overflow: hidden; }
 .championship-location { display: flex; justify-content: center; align-items: center; gap: 8px; padding: 12px 8px; color: #737d89; font: 500 17px/1.25 var(--display); }
 .championship-location svg { flex-shrink: 0; color: #8a929b; }
 .championship-info { scroll-margin-top: 115px; }
-.championship-info h3, .championship-home-info h3 { font: 700 clamp(28px, 3vw, 39px)/1.08 var(--display); text-transform: uppercase; margin: 14px 0 20px; }
-.championship-info p, .championship-home-info p { color: #c9c3b9; font-size: 14px; line-height: 1.8; }
+.championship-info h3 { font: 700 clamp(28px, 3vw, 39px)/1.08 var(--display); text-transform: uppercase; margin: 14px 0 20px; }
+.championship-info p { color: #c9c3b9; font-size: 14px; line-height: 1.8; }
 .championship-info dl { margin: 20px 0; }
 .championship-info dl div { padding: 10px 0; border-bottom: 1px solid #ffffff20; }
 .championship-info dt { color: #b3aa9b; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
 .championship-info dd { margin: 4px 0 0; font-size: 14px; font-weight: 600; }
 .championship-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 18px; margin-top: 22px; }
 .championship-actions > a:not(.button) { color: var(--gold); font-size: 14px; }
-.championship-home-layout { margin: 8px 0 40px; }
 @media (max-width: 800px) { .championship-layout { grid-template-columns: minmax(0, 1fr); gap: 28px; } .championship-grid { max-width: 475px; } .championship-artwork h3 { font-size: 46px; } }
 @media (max-width: 420px) { .championship-artwork { height: 270px; padding: 18px; } .championship-artwork h3 { font-size: 38px; } .championship-date { font-size: 19px; } .championship-location { font-size: 15px; gap: 6px; } }
 
@@ -661,3 +650,60 @@ body.registration-confirmed { overflow: hidden; }
 .event-disclosure .tournament-panel { max-width: 760px; margin-top: 20px; padding: clamp(20px, 3vw, 36px); border: 1px solid #e7b95740; background: #141416; }
 .event-disclosure .event-feature { margin: 20px 0 0; }
 .event-disclosure .event-feature-body h3 { font: 800 clamp(30px, 3.2vw, 46px)/1.05 var(--display); text-transform: uppercase; letter-spacing: -.3px; margin: 20px 0; }
+
+/* Home updates generated from the Events and Programmes pages. */
+.home-updates-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+}
+.update-card {
+  min-width: 0;
+  background: #fffcf6;
+  color: #1d1914;
+  border-radius: 10px;
+}
+.update-card-link {
+  display: flex;
+  flex-direction: column;
+  min-height: 240px;
+  height: 100%;
+  border-radius: inherit;
+}
+.update-card-link:focus-visible { outline: 3px solid #e7b957; outline-offset: 4px; }
+.update-card-link:hover .update-card-footer { text-decoration: underline; text-underline-offset: 4px; }
+.update-event-art {
+  display: grid;
+  place-items: center;
+  min-height: 94px;
+  background: #eef1f5;
+  border-radius: 10px 10px 0 0;
+}
+.update-card-body { padding: 22px 24px; }
+.update-category { color: #785418; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.update-card h3 { margin: 8px 0 0; font: 800 29px/1.05 var(--display); }
+.update-card--event h3 { color: #073d7f; }
+.update-card p { margin: 11px 0 0; font-size: 13px; line-height: 1.6; color: #575047; }
+.update-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+  padding: 14px 24px;
+  border-radius: 0 0 10px 10px;
+  background: #eee6d5;
+  color: #46330f;
+  font-size: 13px;
+  font-weight: 700;
+}
+.update-card--event .update-card-footer { background: #073f89; color: #fff; }
+.update-card--event { grid-column: span 2; }
+@media (max-width: 1000px) {
+  .home-updates-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .update-card--event { grid-column: auto; }
+}
+@media (max-width: 600px) {
+  .home-updates-grid { grid-template-columns: minmax(0, 1fr); }
+  .update-card-link { min-height: 0; }
+}

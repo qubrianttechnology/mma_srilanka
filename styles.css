@@ -595,7 +595,6 @@ body.registration-confirmed { overflow: hidden; }
 .update-card {
   min-width: 0;
   border: 1px solid #ded7c9;
-  border-radius: 12px;
   background: #fffcf6;
   box-shadow: 0 8px 24px #30200c0f;
 }
@@ -675,7 +674,6 @@ body.registration-confirmed { overflow: hidden; }
   flex-direction: column;
   min-height: 240px;
   height: 100%;
-  border-radius: inherit;
 }
 .update-card-link:focus-visible { outline: 3px solid #e7b957; outline-offset: 4px; }
 .update-card-link:hover .update-card-footer { text-decoration: underline; text-underline-offset: 4px; }
@@ -685,7 +683,6 @@ body.registration-confirmed { overflow: hidden; }
   min-height: 94px;
   background: #f3e9d4;
   border-bottom: 1px solid #ded7c9;
-  border-radius: 11px 11px 0 0;
 }
 .update-card-body { padding: 22px 24px; }
 .update-category { color: #785418; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
@@ -700,7 +697,6 @@ body.registration-confirmed { overflow: hidden; }
   margin-top: auto;
   padding: 14px 24px;
   border-top: 1px solid #ded7c9;
-  border-radius: 0 0 11px 11px;
   background: #eee6d5;
   color: #46330f;
   font-size: 13px;
@@ -726,7 +722,6 @@ body:has(.event-popup[open]) { overflow: hidden; }
   padding: 0;
   border: 1px solid #e7b95766;
   border-top: 3px solid var(--gold);
-  border-radius: 12px;
   background: #141416;
   color: #fff;
   overscroll-behavior: contain;
@@ -750,7 +745,6 @@ body:has(.event-popup[open]) { overflow: hidden; }
   min-height: 44px;
   padding: 6px 14px;
   border: 1px solid #e7b95766;
-  border-radius: 6px;
   background: #242126;
   color: #f6d98e;
   font-size: 13px;

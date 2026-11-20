@@ -576,3 +576,21 @@ body.intro-active { overflow: hidden; }
 .championship-home-layout { margin: 8px 0 40px; }
 @media (max-width: 800px) { .championship-layout { grid-template-columns: minmax(0, 1fr); gap: 28px; } .championship-grid { max-width: 475px; } .championship-artwork h3 { font-size: 46px; } }
 @media (max-width: 420px) { .championship-artwork { height: 270px; padding: 18px; } .championship-artwork h3 { font-size: 38px; } .championship-date { font-size: 19px; } .championship-location { font-size: 15px; gap: 6px; } }
+
+/* Clear, recognisable visuals for the three development pathways. */
+.programme-card.programme-card--visual { min-height: 410px; padding: 28px; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px #30200c06; }
+.programme-card--visual .card-no { position: absolute; top: 23px; right: 24px; display: grid; place-items: center; width: 36px; height: 30px; border: 1px solid #c79c4938; border-radius: 16px; font-size: 11px; letter-spacing: 1px; }
+.programme-card--visual.featured .card-no { border-color: #ffffff38; }
+.programme-visual { display: grid; place-items: center; width: 100px; height: 100px; border: 1px solid #e7b95750; border-radius: 24px; background: linear-gradient(145deg, #fff6df, #f3e9d4); margin: 8px 0 28px; }
+.programme-visual span { display: block; font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif; font-size: 58px; font-weight: 400; line-height: 1; }
+.programme-card--visual.featured .programme-visual { background: linear-gradient(145deg, #ffffff22, #e7b95716); border-color: #edcc8f66; }
+.programme-card--visual > .programme-card-copy { display: flex; flex-direction: column; flex: 1; margin-top: 0; }
+.programme-card--visual .card-title { font-size: 32px; line-height: 1.08; }
+.programme-card--visual p { font-size: 14px; line-height: 1.8; margin: 15px 0 24px; }
+.programme-card--visual .programme-card-copy > a { align-items: center; gap: 16px; min-height: 48px; margin-top: auto; padding-top: 16px; font-size: 10px; line-height: 1.6; letter-spacing: 1px; border-color: #c7baa3; }
+.programme-card--visual.featured .programme-card-copy > a { border-color: #ffffff66; }
+.programme-card--visual .programme-cta-icon { display: grid; place-items: center; width: 30px; height: 30px; flex-shrink: 0; border-radius: 50%; background: #ae1f3210; font-size: 15px; }
+.programme-card--visual.featured .programme-cta-icon { background: #ffffff18; color: #f2cf86; }
+.programme-card--visual a:focus-visible { outline: 2px solid #b58a35; outline-offset: 5px; }
+.programme-card--visual.featured a:focus-visible { outline-color: #ffe0a0; }
+@media (max-width: 600px) { .programme-card.programme-card--visual { min-height: 0; padding: 25px; } .programme-visual { width: 88px; height: 88px; margin-bottom: 23px; border-radius: 22px; } .programme-visual span { font-size: 52px; } .programme-card--visual .card-title { font-size: 30px; } }

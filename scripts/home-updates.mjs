@@ -51,10 +51,20 @@ function programmeCards(programmesHtml) {
   });
 }
 
+function eventPanelTemplates(eventsHtml) {
+  // The Events page is the source for the content of each homepage popup.
+  return Array.from(eventsHtml.matchAll(/<details class="event-disclosure">[\s\S]*?<\/summary>\s*([\s\S]*?)<\/details>/g), ([, panel]) => {
+    const id = panel.match(/^<[^>]+\bid="([^"]+)"/)?.[1];
+    if (!id) throw new Error('Event details panel needs an anchor ID.');
+    return '<template data-event-panel="' + escapeHtml(id) + '">\n' + panel.trim() + '\n</template>';
+  });
+}
+
 export function renderHomeUpdates(homeHtml, eventsHtml, programmesHtml, siteUrl) {
   const marker = '<!-- home-update-cards -->';
   if (!homeHtml.includes(marker)) throw new Error('Home Updates card slot is missing.');
   const cards = [...eventCards(eventsHtml, siteUrl), ...programmeCards(programmesHtml)];
-  return homeHtml.replace(marker, () => cards.join('\n'));
+  const templates = eventPanelTemplates(eventsHtml);
+  return homeHtml.replace(marker, () => [...cards, ...templates].join('\n'));
 }
 

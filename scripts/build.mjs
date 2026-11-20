@@ -39,6 +39,7 @@ const files = [
   'clubs.js',
   'styles.css',
   'script.js',
+  'event-details.js',
   'robots.txt',
   'sitemap.xml',
   'site.webmanifest',

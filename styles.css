@@ -623,7 +623,6 @@ body.registration-confirmed { overflow: hidden; }
 .championship-info dd { margin: 4px 0 0; font-size: 14px; font-weight: 600; }
 .championship-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 18px; margin-top: 22px; }
 .championship-actions > a:not(.button) { color: var(--gold); font-size: 14px; }
-.education-events-heading { font: 700 32px/1.1 var(--display) !important; letter-spacing: 0; margin: 0 0 24px !important; }
 .championship-home-layout { margin: 8px 0 40px; }
 @media (max-width: 800px) { .championship-layout { grid-template-columns: minmax(0, 1fr); gap: 28px; } .championship-grid { max-width: 475px; } .championship-artwork h3 { font-size: 46px; } }
 @media (max-width: 420px) { .championship-artwork { height: 270px; padding: 18px; } .championship-artwork h3 { font-size: 38px; } .championship-date { font-size: 19px; } .championship-location { font-size: 15px; gap: 6px; } }
@@ -645,3 +644,20 @@ body.registration-confirmed { overflow: hidden; }
 .programme-card--visual a:focus-visible { outline: 2px solid #b58a35; outline-offset: 5px; }
 .programme-card--visual.featured a:focus-visible { outline-color: #ffe0a0; }
 @media (max-width: 600px) { .programme-card.programme-card--visual { min-height: 0; padding: 25px; } .programme-visual { width: 88px; height: 88px; margin-bottom: 23px; border-radius: 22px; } .programme-visual span { font-size: 52px; } .programme-card--visual .card-title { font-size: 30px; } }
+
+/* Event cards open their details using native disclosures. */
+.event-disclosure-card { display: block; width: min(100%, 475px); cursor: pointer; list-style: none; }
+.event-disclosure-card::-webkit-details-marker { display: none; }
+.event-disclosure-card:focus-visible { outline: 3px solid #e7b957; outline-offset: 4px; }
+.event-disclosure-card:hover .event-disclosure-action { text-decoration-thickness: 2px; }
+.event-disclosure-card .championship-card-title { font: 800 clamp(32px, 3.8vw, 48px)/.96 var(--display); letter-spacing: .4px; margin: 12px 0 10px; }
+.event-disclosure-card .championship-card-title span { font-weight: 700; }
+.event-disclosure-card .championship-card-title b { color: #a66d00; }
+.event-disclosure-card .championship-location { text-align: center; }
+.event-disclosure-action { display: inline-flex; align-items: center; gap: 7px; margin-top: 10px; font-size: 11px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.event-hide-label, .event-disclosure[open] .event-view-label { display: none; }
+.event-disclosure[open] .event-hide-label { display: inline; }
+.event-disclosure[open] .event-disclosure-arrow { transform: rotate(180deg); }
+.event-disclosure .tournament-panel { max-width: 760px; margin-top: 20px; padding: clamp(20px, 3vw, 36px); border: 1px solid #e7b95740; background: #141416; }
+.event-disclosure .event-feature { margin: 20px 0 0; }
+.event-disclosure .event-feature-body h3 { font: 800 clamp(30px, 3.2vw, 46px)/1.05 var(--display); text-transform: uppercase; letter-spacing: -.3px; margin: 20px 0; }

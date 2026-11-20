@@ -111,7 +111,6 @@ function profileContent(club, today) {
     <h2>Federation affiliation</h2><p data-affiliation-summary="${club.affiliationIssuedOn || ''}"${club.affiliationRenewalRequired === false ? ' data-affiliation-renewal="exempt"' : ''}>${affiliationState(club.affiliationIssuedOn, today, club.affiliationRenewalRequired !== false).summary}</p>
     ${club.affiliationNumber?`<p><strong>Affiliation number:</strong> ${e(club.affiliationNumber)}</p>`:''}
     ${dates(club)}
-    ${club.affiliationRenewalRequired !== false ? '<p>Affiliation is valid for one year from the issue date and must then be renewed.</p>' : ''}
     <a class="arrow-link" href="/contact.html">Enquire about affiliation <span aria-hidden="true">&#8599;</span></a></div>
     <aside class="club-contact" aria-labelledby="club-contact-title"><h2 id="club-contact-title">Location &amp; contact</h2><address>${e(address)}</address>
     ${club.phone?`<a href="tel:${e(phoneHref(club))}">${e(club.phone)}</a>`:''}

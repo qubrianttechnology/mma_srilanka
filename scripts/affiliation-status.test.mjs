@@ -35,11 +35,12 @@ assert.equal(expiredSite.clubs[1].affiliationNumber, dojo.affiliationNumber);
 const profilePath = `clubs/${dojo.slug}/index.html`;
 const profile = site.pages.get(profilePath);
 assert(profile.includes('<time datetime="2026-11-11">11 November 2026</time>'));
-assert(profile.includes('<time datetime="2027-11-11">11 November 2027</time>'));
+assert(!profile.includes('<time datetime="2027-11-11">11 November 2027</time>'));
 assert(expiredSite.pages.get(profilePath).includes('club-status--expired'));
 
 for (const path of ['clubs/index.html', 'clubs/countries/lk/index.html', profilePath]) {
   const html = refreshAffiliationHtml(site.pages.get(path), '2027-11-11');
+  assert(!html.includes('Renewal due:'));
   assert(html.includes('class="club-status club-status--expired">Affiliation expired</span>'));
   if (path !== profilePath) assert(html.includes('data-affiliation-renewal="exempt" class="club-status club-status--active">SLMMAF affiliated</span>'));
   assert.equal(refreshAffiliationHtml(html, '2027-11-11'), html);

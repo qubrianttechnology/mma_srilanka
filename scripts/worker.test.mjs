@@ -56,6 +56,25 @@ assert.equal((await submit(applicant, {
 assert.equal((await submit(applicant, {
   ...registrationEnv, REGISTRATIONS: { prepare() { throw new Error('Database offline'); } }
 })).status, 503);
+// Specific validation reasons identify the field without creating a registration.
+for (const [fields, expectedField, reason] of [
+  [{ name: '   ' }, 'name', 'full name'],
+  [{ email: '' }, 'email', 'email address'],
+  [{ email: 'broken-address' }, 'email', 'valid email'],
+  [{ interest: '' }, 'interest', 'role'],
+  [{ programme: 'unknown' }, 'programme', 'programme'],
+  [{ phone: '1'.repeat(31) }, 'phone', 'phone number'],
+  [{ city: 'x'.repeat(81) }, 'city', 'city or district'],
+  [{ message: 'x'.repeat(801) }, 'message', '800 characters'],
+  [{ programme: 'officiating', interest: 'Athlete' }, 'interest', 'Judge or Referee']
+]) {
+  const response = await submit({ ...applicant, ...fields });
+  assert.equal(response.status, 400);
+  const result = await response.json();
+  assert.equal(result.field, expectedField);
+  assert(result.message.includes(reason), result.message);
+}
+assert.equal(database.prepare('SELECT COUNT(*) AS count FROM registrations').get().count, 0);
 assert.equal((await submit()).status, 200);
 assert.equal((await submit()).status, 200);
 const saved = database.prepare('SELECT email, programme FROM registrations').all();

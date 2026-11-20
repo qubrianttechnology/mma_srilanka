@@ -16,8 +16,8 @@ const programmes = new Map([
 ]);
 const roles = new Set(['Athlete', 'Coach', 'Official', 'Judge', 'Referee', 'Club representative', 'Partner']);
 
-function registrationResponse(status, message) {
-  return Response.json({ message }, {
+function registrationResponse(status, message, field) {
+  return Response.json({ message, ...(field ? { field } : {}) }, {
     status,
     headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' }
   });
@@ -46,7 +46,7 @@ async function register(request, env, url) {
       bytes += value.byteLength;
       if (bytes > 8192) {
         await reader.cancel();
-        return registrationResponse(413, 'Your request is too long.');
+        return registrationResponse(413, 'Your message is too long. Please shorten it and try again.');
       }
       body += decoder.decode(value, { stream: true });
     }
@@ -64,14 +64,23 @@ async function register(request, env, url) {
   const city = field('city');
   const message = field('message');
   const requestId = field('requestId');
-  if (!name || name.length > 100 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
-      email.length > 254 || !roles.has(role) || !programme ||
-      !/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(requestId) ||
-      phone.length > 30 || city.length > 80 || message.length > 800) {
-    return registrationResponse(400, 'Check your name, email address, role and programme, then try again.');
-  }
-  if (field('programme') === 'officiating' && role !== 'Judge' && role !== 'Referee') {
-    return registrationResponse(400, 'Choose Judge or Referee for the officiating application.');
+  // Return the first actionable problem without exposing internal service details.
+  const problems = [
+    [!name, 'Please enter your full name.', 'name'],
+    [name.length > 100, 'Please keep your name under 101 characters.', 'name'],
+    [!email, 'Please enter your email address.', 'email'],
+    [email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email), 'Please enter a valid email address, such as name@example.com.', 'email'],
+    [!roles.has(role), 'Please choose your role.', 'interest'],
+    [!programme, 'Please choose the programme you want to apply for.', 'programme'],
+    [phone.length > 30, 'Please keep your phone number under 31 characters.', 'phone'],
+    [city.length > 80, 'Please keep your city or district under 81 characters.', 'city'],
+    [message.length > 800, 'Your message is too long. Please use 800 characters or fewer.', 'message'],
+    [field('programme') === 'officiating' && role !== 'Judge' && role !== 'Referee', 'Please choose Judge or Referee for this application.', 'interest']
+  ];
+  const problem = problems.find(([invalid]) => invalid);
+  if (problem) return registrationResponse(400, problem[1], problem[2]);
+  if (!/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(requestId)) {
+    return registrationResponse(400, 'Please refresh this page and try again.');
   }
 
   try {
@@ -85,7 +94,7 @@ async function register(request, env, url) {
       'VALUES (?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(id) DO NOTHING'
     ).bind(requestId, name, email, role, programme, phone, city, message).run();
   } catch {
-    return registrationResponse(503, 'Your request could not be sent. Please try again or email info@mmasrilanka.com.');
+    return registrationResponse(503, 'Registration is temporarily unavailable. Please try again later or email info@mmasrilanka.com.');
   }
   return registrationResponse(200, 'Registration request sent. SLMMAF will contact you about the next steps.');
 }

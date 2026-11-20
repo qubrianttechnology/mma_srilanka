@@ -24,6 +24,11 @@ for(const file of files){
  assert(!/MMA Srilanka/.test(html),`Inconsistent site name: ${file}`);
  assert(!/<meta[^>]+name="(?:robots|googlebot)"[^>]+content="[^"]*(?:noindex|nofollow|none)/i.test(html),`Public page blocks indexing: ${file}`);
  assert(/<meta name="robots" content="index, follow, max-image-preview:large">/.test(html),`Public robots metadata: ${file}`);
+ for (const [rel, href, sizes] of [['icon','/favicon.ico','96x96 192x192'],['icon','/favicon.png','96x96'],['apple-touch-icon','/assets/slmmaf-icon-192.png','192x192']]) {
+  const tag = [...html.matchAll(/<link\b[^>]*>/g)].map(m=>m[0]).find(tag=>tag.includes(`rel="${rel}"`) && tag.includes(`href="${href}"`));
+  assert(tag && tag.includes(`sizes="${sizes}"`), `Stable, correctly sized favicon on ${file}: ${href}`);
+ }
+
  assert.equal(html.match(/<meta property="og:site_name" content="([^"]+)"/)?.[1],'MMA Sri Lanka');
  for(const name of ['og:title','twitter:title']) assert.equal(html.match(new RegExp(`<meta (?:property|name)="${name}" content="([^"]+)"`))?.[1],title,`Social title: ${file}`);
  for(const name of ['og:description','twitter:description']) assert.equal(html.match(new RegExp(`<meta (?:property|name)="${name}" content="([^"]+)"`))?.[1],description,`Social description: ${file}`);
@@ -79,6 +84,21 @@ assert((await readFile(join(root,'robots.txt'),'utf8')).includes(`Sitemap: ${ori
 const robots=await readFile(join(root,'robots.txt'),'utf8');
 assert(/User-agent: \*/.test(robots)&&/^Allow: \/$/m.test(robots),'Public crawling allowed');
 assert(!/^Disallow: \/$/m.test(robots),'Public site must not be blocked');
+// Validate the published binary, including exact preservation of the existing logo.
+const favicon = await readFile(join(root,'favicon.png'));
+assert.equal(favicon.readUInt32BE(16),96);
+assert.equal(favicon.readUInt32BE(20),96);
+const ico = await readFile(join(root,'favicon.ico'));
+assert.equal(ico.readUInt16LE(0),0);
+assert.equal(ico.readUInt16LE(2),1);
+assert.equal(ico.readUInt16LE(4),2);
+for (const [i,file] of ['favicon.png','assets/slmmaf-icon-192.png'].entries()) {
+ const png=await readFile(join(root,file)), entry=6+i*16;
+ assert.equal(ico[entry],png.readUInt32BE(16));
+ assert.equal(ico[entry+1],png.readUInt32BE(20));
+ const size=ico.readUInt32LE(entry+8), offset=ico.readUInt32LE(entry+12);
+ assert(ico.subarray(offset,offset+size).equals(png),`ICO artwork preserved: ${file}`);
+}
 const clubData=JSON.parse((await readFile(new URL('../data/clubs.json',import.meta.url),'utf8')).replace(/^\uFEFF/,''));
 const today=new Date().toISOString().slice(0,10);
 const directory=await readFile(join(root,'clubs/index.html'),'utf8');

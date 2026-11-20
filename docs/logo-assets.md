@@ -2,6 +2,14 @@
 
 The owner supplied **Sri Lanka MMA Federation Emblem (1).png** and requested background removal and replacement of every website logo. The emblem's own black/white artwork and outer white border are part of the logo; only the exterior dark backdrop is removed.
 
+## Search favicon compatibility — 15 November 2026
+
+Every public page now declares stable `/favicon.png` and `/favicon.ico` URLs, plus the existing 192px Apple touch icon. The build creates the ICO from the exact existing 96px and 192px PNG bytes without changing the emblem. The PNG remains 96 × 96; the ICO includes 96 × 96 and 192 × 192 frames. SEO checks validate discovery tags on every page and the published icon bytes.
+
+Before this update, the live 96px PNG already returned 200 and met Google's size requirement, while `/favicon.ico` returned 404. Adding ICO support improves compatibility; the missing ICO was not established as the cause of Google's globe icon. Requests carrying Googlebot/Googlebot-Image user-agent strings received the homepage and PNG successfully, but that does not establish actual Google crawl or indexing status. Google controls when and whether it refreshes the search favicon. See https://developers.google.com/search/docs/appearance/favicon-in-search.
+
+The stable icon links supersede the version-query references described in the original asset preparation notes below. No Search Console request has been submitted as part of this source update.
+
 ## Final assets
 
 - `assets/slmmaf-emblem-transparent.png`: 1024 × 1024 transparent PNG used by the page templates, sharing metadata and organisation structured data.

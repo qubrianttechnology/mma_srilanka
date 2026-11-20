@@ -67,6 +67,27 @@ for (const file of files) {
 }
 
 await cp(join(root, 'assets'), join(output, 'assets'), { recursive: true });
+// Package the existing PNG artwork unchanged into a conventional root ICO.
+// Keep these favicon URLs stable so crawlers can revisit the same assets.
+const iconFrames = await Promise.all(['favicon.png', 'assets/slmmaf-icon-192.png'].map(file => readFile(join(output, file))));
+const icoHeader = Buffer.alloc(6 + iconFrames.length * 16);
+icoHeader.writeUInt16LE(1, 2);
+icoHeader.writeUInt16LE(iconFrames.length, 4);
+let iconOffset = icoHeader.length;
+for (const [i, png] of iconFrames.entries()) {
+  const width = png.readUInt32BE(16), height = png.readUInt32BE(20);
+  if (width !== height || width < 8 || width > 256) throw new Error('Favicon must be a supported square PNG');
+  const entry = 6 + i * 16;
+  icoHeader[entry] = width === 256 ? 0 : width;
+  icoHeader[entry + 1] = height === 256 ? 0 : height;
+  icoHeader.writeUInt16LE(1, entry + 4);
+  icoHeader.writeUInt16LE(32, entry + 6);
+  icoHeader.writeUInt32LE(png.length, entry + 8);
+  icoHeader.writeUInt32LE(iconOffset, entry + 12);
+  iconOffset += png.length;
+}
+await writeFile(join(output, 'favicon.ico'), Buffer.concat([icoHeader, ...iconFrames]));
+
 await cp(join(root, 'src/affiliation-status.mjs'), join(output, 'affiliation-status.mjs'));
 const clubTemplate = await readFile(join(output, 'clubs.html'), 'utf8');
 const clubSite = renderClubs({ data: clubData, template: clubTemplate, siteUrl });

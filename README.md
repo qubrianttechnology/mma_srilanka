@@ -2,6 +2,10 @@
 
 A responsive, accessible and SEO-ready static website configured for Cloudflare Workers Static Assets.
 
+## Update records
+
+See [docs/updates.md](docs/updates.md) for the latest source updates and documentation status, [docs/logo-assets.md](docs/logo-assets.md) for the federation emblem, and [certificates/README.md](certificates/README.md) for local certificate deliverables. Club publication and QR rules are in [data/README.md](data/README.md); annual affiliation rules are in [docs/club-affiliation-dates.md](docs/club-affiliation-dates.md).
+
 ## Cloudflare deployment
 
 Connect `https://github.com/qubrianttechnology/mma_srilanka` through Cloudflare Workers Builds. In the Cloudflare dashboard, open **Workers & Pages**, create or select the Worker, and connect the GitHub repository. Authorize the Cloudflare GitHub app to access this repository when prompted.

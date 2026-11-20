@@ -8,7 +8,9 @@
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#0b0b0c">
   <link rel="canonical" href="https://mmasrilanka.com/contact">
-  <link rel="icon" href="/favicon.png?v=emblem-20261111" type="image/png" sizes="96x96">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="96x96 192x192">
+  <link rel="icon" href="/favicon.png" type="image/png" sizes="96x96">
+  <link rel="apple-touch-icon" href="/assets/slmmaf-icon-192.png" sizes="192x192">
   <link rel="manifest" href="site.webmanifest">
 
   <meta property="og:type" content="website">
@@ -27,7 +29,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;0,900;1,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=quick-page-intro">
+  <link rel="stylesheet" href="styles.css?v=registration-feedback-20261115">
 
   <script type="application/ld+json">
 {
@@ -113,6 +115,10 @@
           <label><span>Apply for</span><select name="programme" required><option value="membership">Membership, club affiliation or partnership</option><option value="camp">National MMA Development Camp</option><option value="certification">Coach &amp; Official Certification</option><option value="officiating">Judge or Referee Recruitment</option></select></label>
           <label><span>Message (optional)</span><textarea name="message" rows="4" maxlength="800" placeholder="Tell us about your experience, club or enquiry."></textarea></label>
           <p class="form-note">SLMMAF uses these details to review your request and contact you. Share only the information needed for your application.</p>
+          <div class="registration-error" data-form-error role="alert" aria-atomic="true" hidden>
+            <span class="registration-error__icon" aria-hidden="true">!</span>
+            <div><h3>Not submitted</h3><p id="registration-error-reason"></p></div>
+          </div>
           <button class="button button-primary" type="submit">Submit registration request <span aria-hidden="true">↗</span></button>
           <p class="form-status" role="status" aria-live="polite" data-form-status></p>
         </form>
@@ -150,6 +156,20 @@
     </section>
   </main>
 
+
+  <dialog class="registration-success" id="registration-success" aria-labelledby="registration-success-title" aria-describedby="registration-success-description">
+    <button class="registration-success__close" type="button" aria-label="Close confirmation" data-registration-success-close>&times;</button>
+    <div class="registration-success__seal" aria-hidden="true">
+      <img src="assets/slmmaf-emblem-transparent.png" alt="" width="112" height="112">
+      <span><svg viewBox="0 0 24 24" fill="none"><path d="m6 12 4 4 8-8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </div>
+    <p class="registration-success__eyebrow">Registration received</p>
+    <h2 id="registration-success-title">Submitted<br><em>successfully!</em></h2>
+    <p class="registration-success__description" id="registration-success-description">Your registration request has been received. SLMMAF will contact you about the next steps.</p>
+    <button class="registration-success__done" type="button" data-registration-success-close autofocus>Done <span aria-hidden="true">&#10003;</span></button>
+    <p class="registration-success__footer">Sri Lanka Mixed Martial Arts Federation</p>
+  </dialog>
+
   <footer class="footer">
     <div class="container footer-main">
       <div class="brand footer-brand"><img class="brand-logo" src="assets/slmmaf-emblem-transparent.png" alt="Sri Lanka MMA Federation emblem" width="72" height="72"><span class="brand-copy"><strong>Sri Lanka</strong><small>Mixed Martial Arts Federation</small></span></div>
@@ -158,6 +178,6 @@
     </div>
     <div class="container footer-bottom"><span>© <span data-year></span> Sri Lanka MMA Federation</span></div>
   </footer>
-  <script src="script.js?v=quick-page-intro" defer></script>
+  <script src="script.js?v=registration-feedback-20261115" defer></script>
 </body>
 </html>

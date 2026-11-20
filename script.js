@@ -134,6 +134,67 @@ if (registrationForm) {
   const status = registrationForm.querySelector('[data-form-status]');
   const submitButton = registrationForm.querySelector('button[type="submit"]');
   const programme = registrationForm.elements.namedItem('programme');
+  const successDialog = document.querySelector('#registration-success');
+  successDialog?.querySelectorAll('[data-registration-success-close]').forEach(button => {
+    button.addEventListener('click', () => successDialog.close());
+  });
+  successDialog?.addEventListener('close', () => {
+    document.body.classList.remove('registration-confirmed');
+    submitButton.focus({ preventScroll: true });
+  });
+
+  const errorBox = registrationForm.querySelector('[data-form-error]');
+  const errorTitle = errorBox.querySelector('h3');
+  const errorReason = errorBox.querySelector('p');
+  const clearRegistrationError = () => {
+    errorBox.hidden = true;
+    registrationForm.querySelectorAll('[aria-invalid="true"], [aria-describedby~="registration-error-reason"]').forEach(field => {
+      field.removeAttribute('aria-invalid');
+      const describedBy = (field.getAttribute('aria-describedby') || '').split(' ').filter(id => id && id !== 'registration-error-reason');
+      describedBy.length ? field.setAttribute('aria-describedby', describedBy.join(' ')) : field.removeAttribute('aria-describedby');
+    });
+  };
+  const showRegistrationError = (reason, fieldName, title = 'Not submitted') => {
+    clearRegistrationError();
+    status.textContent = '';
+    status.classList.remove('form-status--success');
+    errorTitle.textContent = title;
+    errorReason.textContent = reason;
+    errorBox.hidden = false;
+    const field = fieldName && registrationForm.elements.namedItem(fieldName);
+    if (field && typeof field.focus === 'function') {
+      field.setAttribute('aria-invalid', 'true');
+      field.setAttribute('aria-describedby', [field.getAttribute('aria-describedby'), 'registration-error-reason'].filter(Boolean).join(' '));
+      field.focus({ preventScroll: true });
+    }
+    errorBox.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+  };
+  registrationForm.addEventListener('invalid', event => {
+    event.preventDefault();
+    if (event.target !== registrationForm.querySelector(':invalid')) return;
+    const field = event.target;
+    const messages = {
+      name: 'Please enter your full name.',
+      email: field.validity.valueMissing ? 'Please enter your email address.' : 'Please enter a valid email address, such as name@example.com.',
+      interest: 'Please choose your role.',
+      programme: 'Please choose a programme.'
+    };
+    showRegistrationError(messages[field.name] || 'Please check this field and try again.', field.name);
+  }, true);
+  registrationForm.addEventListener('input', event => {
+    // Keep the reason visible until the next attempt, while clearing the edited field's error.
+    event.target.removeAttribute('aria-invalid');
+  });
+  const responseError = code => ({
+    400: 'Please check your details and try again.',
+    403: 'Your request was blocked. Please refresh this page and try again.',
+    413: 'Your message is too long. Please shorten it and try again.',
+    415: 'Please refresh this page and use the registration form.',
+    429: 'Too many attempts. Please wait one minute and try again.'
+  }[code] || (code >= 500
+    ? 'Registration is temporarily unavailable. Please try again later or email info@mmasrilanka.com.'
+    : 'We could not submit your request. Please refresh this page and try again.'));
+
   const params = new URLSearchParams(window.location.search);
   const requestedProgramme = params.get('programme');
   let requestId;
@@ -147,26 +208,53 @@ if (registrationForm) {
   registrationForm.addEventListener('submit', async event => {
     event.preventDefault();
     if (submitButton.disabled) return;
+    clearRegistrationError();
+    if (navigator.onLine === false) {
+      showRegistrationError('You are offline. Please connect to the internet and try again.');
+      return;
+    }
     submitButton.disabled = true;
-    status.textContent = 'Sending your registration request…';
+    registrationForm.setAttribute('aria-busy', 'true');
+    status.classList.remove('form-status--success');
+    status.textContent = 'Sending your registration request...';
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 20000);
     try {
       requestId ??= crypto.randomUUID();
       const response = await fetch('/api/registration', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
         body: JSON.stringify({ ...Object.fromEntries(new FormData(registrationForm)), requestId })
       });
-      const result = await response.json();
-      status.textContent = result.message;
-      if (response.ok) {
-        registrationForm.reset();
-        if (linkedProgramme) programme.value = linkedProgramme.value;
-        requestId = undefined;
+      // Hosting errors can return HTML; use the HTTP status if there is no JSON reason.
+      const result = await response.json().catch(() => null);
+      if (!response.ok) {
+        showRegistrationError(typeof result?.message === 'string' && result.message.trim() ? result.message : responseError(response.status), result?.field);
+        return;
       }
-    } catch {
-      status.textContent = 'Your request could not be sent. Please try again or email info@mmasrilanka.com.';
+      if (typeof result?.message !== 'string' || !result.message.trim()) {
+        showRegistrationError('We could not confirm your submission. Please try again or contact info@mmasrilanka.com.', undefined, 'Submission not confirmed');
+        return;
+      }
+      status.textContent = result.message;
+      registrationForm.reset();
+      if (linkedProgramme) programme.value = linkedProgramme.value;
+      requestId = undefined;
+      status.classList.add('form-status--success');
+      if (successDialog && typeof successDialog.showModal === 'function' && !successDialog.open) {
+        successDialog.showModal();
+        document.body.classList.add('registration-confirmed');
+      }
+    } catch (error) {
+      const reason = error.name === 'AbortError'
+        ? 'The request took too long. We could not confirm your submission. Please try again.'
+        : 'We could not reach the registration service. Check your internet connection and try again.';
+      showRegistrationError(reason, undefined, 'Submission not confirmed');
     } finally {
+      window.clearTimeout(timeout);
       submitButton.disabled = false;
+      registrationForm.removeAttribute('aria-busy');
     }
   });
   document.querySelectorAll('[data-interest]').forEach(link => {

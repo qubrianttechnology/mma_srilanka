@@ -4,6 +4,12 @@ The owner reports that the website appears for “SLMMAF” but is difficult to 
 
 The website name is **MMA Sri Lanka**. The organisation remains **Sri Lanka Mixed Martial Arts Federation**, abbreviated **SLMMAF**. Existing federation branding and user changes are preserved.
 
+## Current source notes — 13 November 2026
+
+Both MMA Colombo Combat Club and International Japan Karate-Do Youshin Dojo are present in the club data. Approved clubs remain published and in the sitemap after annual affiliation expiry; the Worker and browser refresh their status instead of removing their permanent profiles. The visible affiliation date is the issue date only. See [club affiliation dates](docs/club-affiliation-dates.md) for renewal rules and the MMA Colombo exemption. These rules supersede the historical expiry-removal statements below.
+
+The contact form now submits requests to the Worker for private D1 storage, as described in [README.md](README.md); the earlier email-draft description below is historical. The News source also includes the 24 November 2026 Judge and Referee Training Programme announcement and poster. See [update records](docs/updates.md) for the current source changes. Earlier deployment IDs, page counts and verification results below describe their recorded dates; this documentation update does not establish the deployment or Google indexing status of the latest changes.
+
 ## Club profiles — 11 November 2026
 
 MMA Colombo Combat Club now has a substantive federation profile with its official website, public email, alternate names, training disciplines, beginner/coaching information and confirmed Kohuwala/Wattala venues. Facts were checked against https://mmacolombo.com/ and https://mmacolombo.com/contact.html; the existing phone matches. Current timetables are referred to the club instead of duplicating information that may become stale. No ratings, fees, coordinates or unverified street addresses were added.

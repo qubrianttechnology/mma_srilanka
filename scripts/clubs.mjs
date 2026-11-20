@@ -73,8 +73,7 @@ function badge(club, today) {
   return `<span data-affiliation-badge="${club.affiliationIssuedOn || ''}"${club.affiliationRenewalRequired === false ? ' data-affiliation-renewal="exempt"' : ''} class="club-status club-status--${state.key}">${state.label}</span>`;
 }
 function dates(club) {
-  const state = affiliationState(club.affiliationIssuedOn);
-  return club.affiliationIssuedOn ? `<p class="club-affiliation-dates"><strong>Affiliation issued:</strong> <time datetime="${club.affiliationIssuedOn}">${formatAffiliationDate(club.affiliationIssuedOn)}</time><br><strong>Renewal due:</strong> <time datetime="${state.expiresOn}">${formatAffiliationDate(state.expiresOn)}</time></p>` : '';
+  return club.affiliationIssuedOn ? `<p class="club-affiliation-dates"><strong>Affiliation issued:</strong> <time datetime="${club.affiliationIssuedOn}">${formatAffiliationDate(club.affiliationIssuedOn)}</time></p>` : '';
 }
 function card(club, today) {
   return `<article class="club-card" data-club data-country="${escapeHtml(club.countryCode)}" data-region="${escapeHtml(club.region || club.city)}" data-search="${escapeHtml([club.name,...(club.alternateNames || []),location(club),...(club.trainingLocations || []).map(place => place.city),...(club.disciplines || [])].join(' ').toLowerCase())}">

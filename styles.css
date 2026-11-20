@@ -543,6 +543,57 @@ body.intro-active { overflow: hidden; }
 }
 @media (prefers-reduced-motion: reduce) { .site-intro[open] { display: none; } }
 
+
+/* Registration receipt: native modal keeps keyboard focus inside the confirmation. */
+body.registration-confirmed { overflow: hidden; }
+.registration-success {
+  position: fixed; inset: 0; margin: auto; width: min(480px, calc(100% - 32px));
+  max-height: calc(100dvh - 32px); box-sizing: border-box; overflow-y: auto;
+  border: 1px solid #d8b66b66; border-radius: 24px; padding: 40px 34px 24px;
+  background: radial-gradient(ellipse at 50% 0, #b98c3420, transparent 55%), #121316;
+  color: #f8f5ee; text-align: center; box-shadow: 0 24px 100px #0008;
+}
+.registration-success:not([open]) { display: none; }
+.registration-success[open] { animation: registration-success-in .3s ease-out both; }
+.registration-success::backdrop { background: #080b10b8; backdrop-filter: blur(7px); }
+.registration-success__close {
+  position: absolute; top: 13px; right: 13px; width: 44px; height: 44px;
+  display: grid; place-items: center; border: 1px solid #ffffff20; border-radius: 50%;
+  background: transparent; color: #d5d1c8; font-size: 26px; cursor: pointer;
+}
+.registration-success__seal { position: relative; width: 112px; margin: 0 auto 26px; }
+.registration-success__seal img { display: block; width: 112px; height: 112px; object-fit: contain; }
+.registration-success__seal > span {
+  position: absolute; right: -7px; bottom: -3px; display: grid; place-items: center;
+  width: 36px; height: 36px; border: 4px solid #121316; border-radius: 50%;
+  background: #a8e0b5; color: #123e24;
+}
+.registration-success__seal svg { width: 24px; height: 24px; }
+.registration-success__eyebrow { color: #e7b957; font: 700 10px var(--body); letter-spacing: 2px; text-transform: uppercase; margin: 0 0 15px; }
+.registration-success h2 { margin: 0 0 22px; font: 800 clamp(30px, 8.5vw, 52px)/.98 var(--display); text-transform: uppercase; letter-spacing: -.5px; }
+.registration-success h2 em { color: #e7b957; }
+.registration-success__description { color: #c5c6c8; font: 400 14px/1.8 var(--body); max-width: 340px; margin: 0 auto 27px; }
+.registration-success__done {
+  width: 100%; min-height: 50px; display: flex; justify-content: center; align-items: center; gap: 15px;
+  border: 0; border-radius: 9px; background: #e7b957; color: #17150e;
+  font: 700 12px var(--body); text-transform: uppercase; letter-spacing: 1.2px; cursor: pointer;
+}
+.registration-success__done:hover { background: #f2cc7e; }
+.registration-success button:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
+.registration-success__footer { color: #9b9d9f; font: 400 10px/1.7 var(--body); margin: 19px 0 0; }
+#registration .form-status--success { border-left: 3px solid #b8e6c3; padding: 12px 15px; background: #1113; }
+@keyframes registration-success-in { from { opacity: 0; transform: translateY(14px) scale(.97); } to { opacity: 1; transform: none; } }
+@media (max-width: 380px) { .registration-success { padding: 34px 22px 22px; } }
+@media (prefers-reduced-motion: reduce) { .registration-success[open] { animation: none; } }
+
+/* Clear, actionable submission errors stay beside the form and preserve entered details. */
+.registration-error { display: flex; align-items: flex-start; gap: 13px; padding: 18px; margin: 20px 0 16px; border: 1px solid #f2c8c1; border-left: 4px solid #a22d29; border-radius: 10px; background: #fff5f2; color: #4a201e; }
+.registration-error[hidden] { display: none; }
+.registration-error__icon { display: grid; place-items: center; flex: 0 0 25px; height: 25px; border-radius: 50%; background: #a22d29; color: white; font: 700 16px var(--body); }
+#registration .registration-error h3 { margin: 0 0 6px; font: 700 16px/1.3 var(--body); text-transform: none; letter-spacing: 0; }
+#registration .registration-error p { margin: 0; color: #633c37; font: 400 14px/1.65 var(--body); overflow-wrap: anywhere; }
+#registration [aria-invalid="true"] { outline: 2px solid #fff0ce; outline-offset: 4px; }
+
 /* Championship calendar: white artwork cards with a blue date and location strip. */
 .championship-section { margin: 42px 0 64px; }
 .championship-heading { margin-bottom: 26px; }

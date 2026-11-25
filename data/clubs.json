@@ -63,7 +63,28 @@
       "status": "approved",
       "affiliationNumber": "SLMMAF-CLUB-0002",
       "affiliationIssuedOn": "2026-11-11"
+    },
+    {
+      "slug": "eliminator",
+      "name": "ELIMINATOR",
+      "countryCode": "LK",
+      "country": "Sri Lanka",
+      "city": "Nawalapitiya",
+      "district": "Kandy",
+      "streetAddress": "2/3, Mapakanda",
+      "description": "ELIMINATOR offers kickboxing, wushu and no-gi grappling for children, teenagers and adults in Nawalapitiya, Kandy, Sri Lanka.",
+      "headInstructor": "L.G. Sithum Theekshana Liyanage",
+      "disciplines": [
+        "Kickboxing",
+        "Wushu",
+        "No-Gi Grappling"
+      ],
+      "trainingInformation": "ELIMINATOR welcomes children, teenagers and adults. Club representative and head coach L.G. Sithum Theekshana Liyanage is a school and professional wushu coach and a national kickboxing referee. For backup enquiries, contact W.A. Shashini Kaushalya, assistant coach and women's coach, on 071 532 0422.",
+      "phone": "076 671 4040",
+      "email": "shashapheonix@gmail.com",
+      "status": "approved",
+      "affiliationNumber": "SLMMAF-CLUB-0003"
     }
   ],
-  "affiliationSequence": 2
+  "affiliationSequence": 3
 }
